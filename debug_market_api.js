@@ -1,18 +1,26 @@
-const axios = require('axios');
+const mongoose = require('mongoose');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, './.env') });
+const MarketPrice = require('./models/MarketPrice');
 
-const BASE_URL = 'http://localhost:5001/api/market';
+mongoose.connect(process.env.MONGO_URI)
+    .then(async () => {
+        console.log('🍃 Connected');
 
-const testMarketAPI = async () => {
-    console.log('🧪 Testing Market APIs (Deep Debug)...');
+        console.time('fetchCrops');
+        const crops = await MarketPrice.distinct('crop');
+        console.timeEnd('fetchCrops');
+        console.log(`Found ${crops.length} crops`);
+        console.log('Sample:', crops.slice(0, 5));
 
-    try {
-        console.log('\n--- Testing /history ---');
-        const historyRes = await axios.get(`${BASE_URL}/history?crop=Wheat`);
-        console.log('Full History Response:', JSON.stringify(historyRes.data, null, 2));
+        console.time('qualityPriceQuery');
+        const recent = await MarketPrice.find({ crop: new RegExp('Wheat', 'i') }).limit(10);
+        console.timeEnd('qualityPriceQuery');
+        console.log(`Found ${recent.length} records for Wheat`);
 
-    } catch (error) {
-        console.error('❌ API Test Failed:', error.message);
-    }
-};
-
-testMarketAPI();
+        process.exit(0);
+    })
+    .catch(err => {
+        console.error(err);
+        process.exit(1);
+    });

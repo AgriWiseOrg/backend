@@ -1,0 +1,93 @@
+PASS __tests__/qualityCalculator.test.js
+FAIL __tests__/predictionEngine.test.js
+  ● PredictionEngine Utility › addSeasonality should add sine wave component
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 100
+    Received: 98.79
+
+    [0m [90m 23 |[39m             phase[33m:[39m [35m0[39m
+     [90m 24 |[39m         })[33m;[39m
+    [31m[1m>[22m[39m[90m 25 |[39m         expect(result)[33m.[39mtoBe([35m100[39m)[33m;[39m
+     [90m    |[39m                        [31m[1m^[22m[39m
+     [90m 26 |[39m     })[33m;[39m
+     [90m 27 |[39m
+     [90m 28 |[39m     test([32m'addSeasonality should peak with sine wave'[39m[33m,[39m () [33m=>[39m {[0m
+
+      at Object.toBe (__tests__/predictionEngine.test.js:25:24)
+
+  ● PredictionEngine Utility › addSeasonality should peak with sine wave
+
+    expect(received).toBeCloseTo(expected)
+
+    Expected: 110
+    Received: 109.55
+
+    Expected precision:    2
+    Expected difference: < 0.005
+    Received difference:   0.45000000000000284
+
+    [0m [90m 37 |[39m         })[33m;[39m
+     [90m 38 |[39m         [90m// 100 + 10*1 = 110[39m
+    [31m[1m>[22m[39m[90m 39 |[39m         expect(result)[33m.[39mtoBeCloseTo([35m110[39m)[33m;[39m
+     [90m    |[39m                        [31m[1m^[22m[39m
+     [90m 40 |[39m     })[33m;[39m
+     [90m 41 |[39m
+     [90m 42 |[39m     [90m// 3. Training (Linear Regression)[39m[0m
+
+      at Object.toBeCloseTo (__tests__/predictionEngine.test.js:39:24)
+
+PASS __tests__/demandForecast.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.3] injecting env (2) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+PASS __tests__/predictionModel.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.3] injecting env (2) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+PASS __tests__/marketRoutes.test.js (7.145 s)
+  ● Console
+
+    console.log
+      [dotenv@17.2.3] injecting env (2) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+    console.log
+      🍃 MongoDB Connected Successfully
+
+      at log (server.js:39:23)
+
+    console.warn
+      ⚠️ External Market API unreachable or empty, switching to DB Fallback...
+
+    [0m [90m 203 |[39m       }
+     [90m 204 |[39m     } [36mcatch[39m (apiError) {
+    [31m[1m>[22m[39m[90m 205 |[39m       console[33m.[39mwarn([32m'⚠️ External Market API unreachable or empty, switching to DB Fallback...'[39m)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 206 |[39m     }
+     [90m 207 |[39m
+     [90m 208 |[39m     [90m// Fallback: Fetch recent unique market prices from DB[39m[0m
+
+      at warn (server.js:205:15)
+      at Generator.call (server.js:2:1)
+      at Generator._invoke [as throw] (server.js:2:1)
+      at asyncGeneratorStep (server.js:2:1)
+      at asyncGeneratorStep (server.js:2:1)
+
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       2 failed, 23 passed, 25 total
+Snapshots:   0 total
+Time:        8.13 s
+Ran all test suites matching __tests__/qualityCalculator.test.js|__tests__/predictionEngine.test.js|__tests__/demandForecast.test.js|__tests__/predictionModel.test.js|__tests__/marketRoutes.test.js.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
