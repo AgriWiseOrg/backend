@@ -224,18 +224,18 @@ app.get('/api/market/history', async (req, res) => {
   }
 });
 
-// 3. Demand Forecasts
-app.get('/api/market/demand', async (req, res) => {
+// 3. Available Crops
+app.get('/api/market/crops', async (req, res) => {
   try {
-    const demandData = await DemandForecast.find({});
-    res.json(demandData);
+    const crops = await MarketPrice.distinct('crop');
+    res.json(crops);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch demand forecasts' });
+    console.error('Failed to fetch crops:', error);
+    res.status(500).json({ error: 'Failed to fetch crops' });
   }
 });
 
-
-// 4. 30-Day Price Forecast (Restored with Sine Wave Logic)
+// 4. Demand Forecasts
 app.get('/api/market/forecast-30-days', async (req, res) => {
   const { crop } = req.query;
   if (!crop) return res.status(400).json({ error: 'Crop parameter required' });
@@ -322,6 +322,100 @@ app.get('/api/market/forecast-30-days', async (req, res) => {
   }
 });
 
+// 5. Demand Data (for visualization)
+app.get('/api/market/demand', async (req, res) => {
+  const { crop } = req.query;
+
+  try {
+    // If specific crop requested, return forecast for that crop
+    if (crop) {
+      const model = await PredictionModel.findOne({ crop });
+      if (!model) {
+        return res.json([]);
+      }
+
+      // Return simplified demand data
+      res.json([{
+        crop,
+        demandLevel: 'Moderate',
+        trend: model.slope > 0 ? 'Increasing' : 'Decreasing',
+        confidence: Math.min(95, 50 + (model.sampleSize * 2))
+      }]);
+    } else {
+      // Return general demand data
+      const crops = await MarketPrice.distinct('crop');
+      const demandData = crops.slice(0, 10).map(crop => ({
+        crop,
+        demandLevel: 'Moderate',
+        trend: 'Stable'
+      }));
+      res.json(demandData);
+    }
+  } catch (error) {
+    console.error('Demand Error:', error);
+    res.status(500).json({ error: 'Failed to fetch demand data' });
+  }
+});
+
+// 6. Quality-Based Price Calculator
+app.get('/api/market/quality-price', async (req, res) => {
+  const { crop, grade, moisture, damage } = req.query;
+
+  try {
+    if (!crop || !grade) {
+      return res.status(400).json({ error: 'Crop and grade parameters required' });
+    }
+
+    // Get base price from most recent market data
+    const recentPrice = await MarketPrice.findOne({ crop }).sort({ date: -1 });
+
+    if (!recentPrice) {
+      return res.status(404).json({ error: 'No price data found for this crop' });
+    }
+
+    // Use quality calculator utility
+    const QualityCalculator = require('./utils/qualityCalculator');
+    const params = {
+      moisture: moisture ? parseFloat(moisture) : undefined,
+      damage: damage ? parseFloat(damage) : undefined
+    };
+
+    const result = QualityCalculator.calculate(recentPrice.price, grade, params);
+    res.json(result);
+
+  } catch (error) {
+    console.error('Quality Price Error:', error);
+    res.status(500).json({ error: 'Failed to calculate quality price' });
+  }
+});
+
+// POST version for Quality Price Calculator (used by frontend)
+app.post('/api/market/quality-price', async (req, res) => {
+  const { crop, grade, params } = req.body;
+
+  try {
+    if (!crop || !grade) {
+      return res.status(400).json({ error: 'Crop and grade are required' });
+    }
+
+    // Get base price from most recent market data
+    const recentPrice = await MarketPrice.findOne({ crop }).sort({ date: -1 });
+
+    if (!recentPrice) {
+      return res.status(404).json({ error: 'No price data found for this crop' });
+    }
+
+    // Use quality calculator utility
+    const QualityCalculator = require('./utils/qualityCalculator');
+    const result = QualityCalculator.calculate(recentPrice.price, grade, params || {});
+    res.json(result);
+
+  } catch (error) {
+    console.error('Quality Price Error:', error);
+    res.status(500).json({ error: 'Failed to calculate quality price' });
+  }
+});
+
 // Cart Routes
 app.use('/api/cart', cartRoutes);
 
@@ -334,6 +428,13 @@ app.use('/api/products', productRoutes);
 
 // ================= SERVER START =================
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on http://localhost:${PORT}`)
-);
+
+// Only start server if not being imported for testing
+if (require.main === module) {
+  app.listen(PORT, () =>
+    console.log(`🚀 Server running on http://localhost:${PORT}`)
+  );
+}
+
+// Export for testing
+module.exports = app;

@@ -1,71 +1,101 @@
 const mongoose = require('mongoose');
-require('dotenv').config({ path: '../.env' }); // Adjust path if needed
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
+const parseCSV = require('../utils/csvParser');
 const MarketPrice = require('../models/MarketPrice');
-const DemandForecast = require('../models/DemandForecast');
 
-const CROPS = ['Wheat', 'Rice', 'Corn', 'Potato', 'Tomato', 'Onion', 'Soybean'];
-const MONTHS_BACK = 6;
-
-const seedData = async () => {
+/**
+ * Seeds the MarketPrice collection with 6 months of historical data
+ * for all crops found in the commodity_price.csv file
+ */
+async function seedMarketData() {
     try {
-        await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/agriwise');
+        // Connect to MongoDB
+        await mongoose.connect(process.env.MONGO_URI);
         console.log('🍃 MongoDB Connected');
 
-        // CLEAR OLD DATA
+        // Parse CSV file
+        const csvPath = path.join(__dirname, '..', 'data', 'commodity_price.csv');
+        console.log('📄 Reading CSV file...');
+        const records = await parseCSV(csvPath);
+        console.log(`✅ Parsed ${records.length} records from CSV`);
+
+        // Extract unique crops and their average modal prices
+        const cropPriceMap = new Map();
+
+        records.forEach(record => {
+            const crop = record.Commodity;
+            const modalPrice = parseFloat(record.Modal_x0020_Price);
+
+            if (crop && !isNaN(modalPrice) && modalPrice > 0) {
+                if (!cropPriceMap.has(crop)) {
+                    cropPriceMap.set(crop, []);
+                }
+                cropPriceMap.get(crop).push(modalPrice);
+            }
+        });
+
+        console.log(`📊 Found ${cropPriceMap.size} unique crops`);
+
+        // Clear existing data
         await MarketPrice.deleteMany({});
-        await DemandForecast.deleteMany({});
-        console.log('🗑️  Cleared old market data');
+        console.log('🗑️  Cleared existing market price data');
 
-        // 1. SEED MARKET PRICES (History)
-        const priceDocs = [];
-        const markets = ['New Delhi', 'Mumbai', 'Indore', 'Pune', 'Nagpur'];
+        // Generate 6 months of historical data for each crop
+        const historicalData = [];
+        const today = new Date();
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-        CROPS.forEach(crop => {
-            let basePrice = 2000 + Math.random() * 3000; // Base price between 2000-5000
+        cropPriceMap.forEach((prices, crop) => {
+            // Calculate average modal price for this crop
+            const avgPrice = prices.reduce((sum, p) => sum + p, 0) / prices.length;
 
-            for (let i = 0; i < MONTHS_BACK; i++) {
-                // Generate one entry per month
-                const date = new Date();
-                date.setMonth(date.getMonth() - i);
-                date.setDate(1); // First of the month
+            // Generate data points (one per week for 6 months = ~26 data points)
+            const weeksInSixMonths = 26;
 
-                // Random fluctuation
-                let fluctuation = (Math.random() * 400) - 200;
-                // Correct trend: prices should ideally go UP over time (so LOWER in the past)
-                let price = Math.round(basePrice - (i * 50) + fluctuation);
+            for (let i = 0; i < weeksInSixMonths; i++) {
+                const date = new Date(sixMonthsAgo);
+                date.setDate(date.getDate() + (i * 7)); // Add weeks
 
-                priceDocs.push({
+                // Add realistic variation with seasonal pattern
+                const seasonalFactor = 1 + (0.1 * Math.sin((i / weeksInSixMonths) * Math.PI * 2));
+                const randomVariation = 0.9 + (Math.random() * 0.2); // ±10% variation
+                const price = Math.round(avgPrice * seasonalFactor * randomVariation);
+
+                historicalData.push({
                     crop,
-                    market: markets[Math.floor(Math.random() * markets.length)],
                     price,
                     date,
+                    market: 'Historical Data',
                     state: 'India'
                 });
             }
         });
 
-        await MarketPrice.insertMany(priceDocs);
-        console.log(`✅ Seeded ${priceDocs.length} price history records`);
+        // Insert all historical data
+        await MarketPrice.insertMany(historicalData);
+        console.log(`✅ Seeded ${historicalData.length} historical price records`);
+        console.log(`📈 ${cropPriceMap.size} crops now have 6 months of historical data`);
 
-        // 2. SEED DEMAND FORECASTS
-        const demandDocs = [
-            { crop: 'Wheat', demandLevel: 'High', growth: '+15%', reason: 'Global shortage expected' },
-            { crop: 'Rice', demandLevel: 'Moderate', growth: '+5%', reason: 'Stable export demand' },
-            { crop: 'Corn', demandLevel: 'High', growth: '+10%', reason: 'Increased poultry feed demand' },
-            { crop: 'Potato', demandLevel: 'Low', growth: '-2%', reason: 'Surplus cold storage stock' },
-            { crop: 'Tomato', demandLevel: 'Very High', growth: '+25%', reason: 'Crop damage due to rain' },
-            { crop: 'Soybean', demandLevel: 'High', growth: '+18%', reason: 'Edible oil price hike' }
-        ];
+        // Display sample crops
+        const sampleCrops = Array.from(cropPriceMap.keys()).slice(0, 10);
+        console.log('\n📋 Sample crops seeded:');
+        sampleCrops.forEach(crop => console.log(`   - ${crop}`));
+        if (cropPriceMap.size > 10) {
+            console.log(`   ... and ${cropPriceMap.size - 10} more`);
+        }
 
-        await DemandForecast.insertMany(demandDocs);
-        console.log(`✅ Seeded ${demandDocs.length} demand forecasts`);
+        await mongoose.disconnect();
+        console.log('\n🎉 Seeding completed successfully!');
+        process.exit(0);
 
-        process.exit();
     } catch (error) {
-        console.error('❌ Seeding Error:', error);
+        console.error('❌ Seeding failed:', error);
         process.exit(1);
     }
-};
+}
 
-seedData();
+// Run the seeding function
+seedMarketData();
