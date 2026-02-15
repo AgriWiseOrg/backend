@@ -42,7 +42,7 @@ router.post('/add', async (req, res) => {
             price: Number(product.price) || 0,
             quantity: 1,
             imageUrl: product.imageUrl || "",
-            farmer: product.farmer || "Unknown Farmer"
+            farmerName: product.farmerName || "Verified Local Farmer"
         };
 
         let cart = await Cart.findOne({ userEmail: email });

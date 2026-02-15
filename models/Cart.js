@@ -33,7 +33,7 @@ const cartSchema = new mongoose.Schema({
             imageUrl: {
                 type: String
             },
-            farmer: {
+            farmerName: {
                 type: String
             }
         }
