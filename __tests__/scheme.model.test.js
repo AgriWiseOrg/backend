@@ -1,3 +1,10 @@
+/*
+Unit Tests for Scheme Model:
+- Saves valid scheme with default values
+- Verifies timestamps & default color
+- Fails if required fields are missing
+*/
+
 const mongoose = require('mongoose');
 const Scheme = require('../models/Scheme');
 

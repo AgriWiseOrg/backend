@@ -1,5 +1,41 @@
 const router = require('express').Router();
 const FinanceRequest = require('../models/FinanceRequest');
+const FinanceScheme = require('../models/FinanceScheme');
+
+// === FINANCE SCHEMES CRUD ===
+
+// 1. GET all finance schemes
+router.get('/', async (req, res) => {
+  try {
+    const schemes = await FinanceScheme.find().sort({ createdAt: -1 });
+    res.json(schemes);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch finance schemes" });
+  }
+});
+
+// 2. Add a new finance scheme
+router.post('/add', async (req, res) => {
+  try {
+    const newScheme = new FinanceScheme(req.body);
+    const savedScheme = await newScheme.save();
+    res.status(201).json(savedScheme);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to add finance scheme" });
+  }
+});
+
+// 3. Delete a finance scheme
+router.delete('/:id', async (req, res) => {
+  try {
+    await FinanceScheme.findByIdAndDelete(req.params.id);
+    res.json({ message: "Finance scheme deleted" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete finance scheme" });
+  }
+});
+
+// === APPLICATIONS ===
 
 // POST: Save a new application when a farmer clicks "Apply Now"
 router.post('/apply', async (req, res) => {
