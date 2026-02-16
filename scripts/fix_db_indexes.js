@@ -6,7 +6,7 @@ const MarketPrice = require('../models/MarketPrice');
 mongoose.connect(process.env.MONGO_URI)
     .then(async () => {
         console.log('🍃 Connected to DB for Indexing');
-
+        //this is index.js file
         // Explicitly create indexes defined in Schema
         await MarketPrice.createIndexes();
         console.log('✅ Indexes Created/Updated');
