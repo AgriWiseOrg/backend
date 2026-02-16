@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const Product = require('./models/Products'); // Points to Products.js
+const Product = require('../models/Products'); // Points to Products.js
 
 describe('Product Model Unit Tests', () => {
-    
+
     // 1. Validation for Required Fields
     test('should fail if required fields are missing', async () => {
         const product = new Product({}); // Empty object
@@ -53,13 +53,13 @@ describe('Product Model Unit Tests', () => {
         };
 
         const product = new Product(validData);
-        
+
         // Verify Trim logic
-        expect(product.name).toBe('Fresh Tomatoes'); 
+        expect(product.name).toBe('Fresh Tomatoes');
         // Verify Schema Defaults
         expect(product.description).toBe("Fresh harvest from local fields.");
         expect(product.rating).toBe(4.5);
-        
+
         const err = await product.validate();
         expect(err).toBeUndefined(); // Passes validation
     });
