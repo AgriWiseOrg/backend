@@ -1,3 +1,11 @@
+/*
+Unit Tests for FarmingTip Model:
+- Saves valid tip with default values
+- Verifies default fields are set
+- Fails if required fields are missing
+*/
+
+
 const mongoose = require('mongoose');
 const FarmingTip = require('../models/FarmingTip');
 

@@ -1,3 +1,10 @@
+/*
+Unit Tests for FinanceRequest Model:
+- Saves valid finance request
+- Checks default status & applied date
+- Fails if required fields are missing
+*/
+
 const mongoose = require('mongoose');
 const FinanceRequest = require('../models/FinanceRequest');
 
