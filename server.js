@@ -22,6 +22,7 @@ const cartRoutes = require('./routes/cartroutes');
 const supportRoutes = require('./routes/support');
 const productRoutes = require('./routes/products');
 const userRoutes = require('./routes/users');
+const orderRoutes = require('./routes/orders');
 // ================= MIDDLEWARE (CRITICAL ORDER) =================
 // These must be defined BEFORE any routes to process data correctly
 app.use(cors());
@@ -33,6 +34,7 @@ app.use('/api/finance', financeRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes);
 app.use('/api/govt-schemes', require('./routes/govtSchemes'));
 app.use('/api/farming-tips', require('./routes/farmingTips'));
 app.use('/api/latest-updates', require('./routes/latestUpdates'));
