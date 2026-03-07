@@ -1,3 +1,10 @@
+/*
+Unit Tests for GovtScheme Model:
+- Saves valid scheme successfully
+- Fails when required fields are missing
+- Verifies MongoDB schema validation
+*/
+
 const mongoose = require('mongoose');
 const GovtScheme = require('../models/GovtScheme');
 
