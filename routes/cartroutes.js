@@ -56,7 +56,7 @@ router.post('/add', async (req, res) => {
             } else {
                 cart.items.push(productItem);
             }
-            
+
             cart.markModified('items');
             await cart.save();
         } else {
