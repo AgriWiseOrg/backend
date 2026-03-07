@@ -67,4 +67,56 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// CREATE new orders from Cart (Split by Farmer)
+router.post('/', async (req, res) => {
+    try {
+        const { buyerEmail, items } = req.body;
+
+        if (!buyerEmail || !items || items.length === 0) {
+            return res.status(400).json({ message: "Buyer email and items are required" });
+        }
+
+        // Group cart items by farmer email
+        const ordersByFarmer = {};
+
+        items.forEach(item => {
+            // Fallback for missing farmer info
+            const farmerEmail = item.farmerEmail || `${item.farmerName ? item.farmerName.replace(/\s+/g, '').toLowerCase() : 'verifiedfarmer'}@agriwise.com`;
+
+            if (!ordersByFarmer[farmerEmail]) {
+                ordersByFarmer[farmerEmail] = {
+                    farmerName: item.farmerName || "Verified Farmer",
+                    items: [],
+                    totalAmount: 0
+                };
+            }
+            ordersByFarmer[farmerEmail].items.push(item);
+            ordersByFarmer[farmerEmail].totalAmount += (item.price * item.quantity);
+        });
+
+        // Create individual Order documents for each farmer
+        const createdOrders = [];
+        for (const [farmerEmail, data] of Object.entries(ordersByFarmer)) {
+            const newOrder = new Order({
+                buyerEmail,
+                farmerEmail,
+                items: data.items,
+                totalAmount: data.totalAmount,
+                status: 'Pending'
+            });
+            await newOrder.save();
+            createdOrders.push(newOrder);
+        }
+
+        res.status(201).json({
+            message: "Orders created successfully",
+            orders: createdOrders
+        });
+
+    } catch (error) {
+        console.error("CREATE ORDER ERROR:", error);
+        res.status(500).json({ message: "Error creating orders", error: error.message });
+    }
+});
+
 module.exports = router;

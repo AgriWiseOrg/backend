@@ -93,4 +93,24 @@ router.post('/remove', async (req, res) => {
     }
 });
 
+// 4. CLEAR CART (After Successful Payment)
+router.delete('/clear/:email', async (req, res) => {
+    try {
+        const email = req.params.email;
+        if (!email) return res.status(400).json({ message: "Email is required" });
+
+        const cart = await Cart.findOne({ userEmail: email.toLowerCase() });
+
+        if (cart) {
+            cart.items = [];
+            await cart.save();
+        }
+
+        res.status(200).json({ message: "Cart cleared successfully" });
+    } catch (error) {
+        console.error("CLEAR CART ERROR:", error);
+        res.status(500).json({ message: "Error clearing cart", error: error.message });
+    }
+});
+
 module.exports = router;
