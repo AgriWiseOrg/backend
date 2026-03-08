@@ -1,0 +1,355 @@
+
+> server@1.0.0 test
+> node node_modules/jest/bin/jest.js test/ --no-color
+
+  console.error
+    ❌ WEATHER API ERROR: Weather API unavailable
+
+    [0m [90m 290 |[39m         })[33m;[39m
+     [90m 291 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 292 |[39m         console[33m.[39merror([32m'❌ WEATHER API ERROR:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 293 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m message[33m:[39m [32m'Failed to fetch regional weather intelligence.'[39m })[33m;[39m
+     [90m 294 |[39m     }
+     [90m 295 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:292:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.log
+    📬 NEW SUPPORT QUERY: {
+      name: 'Test Farmer',
+      email: 'farmer@test.com',
+      subject: 'Need help with crops',
+      message: 'How do I deal with pests?',
+      language: 'en'
+    }
+
+      at log (routes/support.js:127:13)
+
+  console.error
+    ❌ WEATHER API ERROR: ETIMEDOUT
+
+    [0m [90m 290 |[39m         })[33m;[39m
+     [90m 291 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 292 |[39m         console[33m.[39merror([32m'❌ WEATHER API ERROR:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 293 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m message[33m:[39m [32m'Failed to fetch regional weather intelligence.'[39m })[33m;[39m
+     [90m 294 |[39m     }
+     [90m 295 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:292:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.log
+    📬 NEW SUPPORT QUERY: {
+      name: undefined,
+      email: 'farmer@test.com',
+      subject: 'Test',
+      message: 'Test message',
+      language: 'en'
+    }
+
+      at log (routes/support.js:127:13)
+
+PASS test/weather.test.js
+  Weather Routes
+    GET /api/support/weather
+      √ should fetch weather data with default parameters (32 ms)
+      √ should fetch weather data for specific location (5 ms)
+      Crop-specific advisories
+        √ should provide Rice-specific advisory for high heat (4 ms)
+        √ should provide Rice-specific advisory for rain (3 ms)
+        √ should provide Wheat-specific advisory for high temperature (3 ms)
+        √ should provide Wheat-specific advisory for rain (3 ms)
+        √ should provide Tomato-specific advisory for extreme heat (3 ms)
+        √ should provide Tomato-specific advisory for rain/humidity (3 ms)
+        √ should provide general advisory for normal conditions (3 ms)
+        √ should provide critical alert for extreme heat (4 ms)
+        √ should provide warning for precipitation (3 ms)
+      Multilingual support
+        √ should return advisory in Hindi (4 ms)
+        √ should return advisory in Telugu (2 ms)
+        √ should return advisory in Kannada (3 ms)
+        √ should default to English when language not specified (3 ms)
+      Error handling
+        √ should handle weather API errors gracefully (32 ms)
+        √ should handle network timeout errors (6 ms)
+      Data validation
+        √ should include rain probability data (3 ms)
+        √ should include 5-day forecast (3 ms)
+        √ should include current weather parameters (3 ms)
+
+  console.log
+    📬 NEW SUPPORT QUERY: {
+      name: 'Test Farmer',
+      email: 'farmer@test.com',
+      subject: 'Test',
+      message: 'Test message',
+      language: undefined
+    }
+
+      at log (routes/support.js:127:13)
+
+  console.error
+    ❌ QUERY ERROR: Error: Database error
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:78:68
+        at Generator.call (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at Generator._invoke [as next] (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at _next (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at new Promise (<anonymous>)
+        at Object.<anonymous> (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at Promise.finally.completed (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at _runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m 142 |[39m         })[33m;[39m
+     [90m 143 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 144 |[39m         console[33m.[39merror([32m'❌ QUERY ERROR:'[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 145 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m error[33m:[39m [32m'Failed to save query'[39m })[33m;[39m
+     [90m 146 |[39m     }
+     [90m 147 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:144:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.log
+    ⚖️ NEW DISPUTE REPORTED: {
+      name: 'Test Farmer',
+      email: 'farmer@test.com',
+      buyerName: 'Test Buyer',
+      orderId: 'ORD-123',
+      issue: 'Delayed Payment',
+      details: 'Payment not received for 30 days'
+    }
+
+      at log (routes/support.js:153:13)
+
+  console.log
+    ⚖️ NEW DISPUTE REPORTED: {
+      name: 'Test Farmer',
+      email: 'farmer@test.com',
+      buyerName: 'Test Buyer',
+      orderId: 'ORD-123',
+      issue: 'Quality Dispute',
+      details: 'Product quality not as agreed'
+    }
+
+      at log (routes/support.js:153:13)
+
+  console.error
+    ❌ DISPUTE ERROR: Error: Save failed
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:135:68
+        at Generator.call (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at Generator._invoke [as next] (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at _next (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at new Promise (<anonymous>)
+        at Object.<anonymous> (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at Promise.finally.completed (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at _runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m 168 |[39m         })[33m;[39m
+     [90m 169 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 170 |[39m         console[33m.[39merror([32m'❌ DISPUTE ERROR:'[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 171 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m error[33m:[39m [32m'Failed to register dispute'[39m })[33m;[39m
+     [90m 172 |[39m     }
+     [90m 173 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:170:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.error
+    ❌ FETCH REPORTS ERROR: Error: Database error
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:185:51
+        at Generator.call (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at Generator._invoke [as next] (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at _next (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at new Promise (<anonymous>)
+        at Object.<anonymous> (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at Promise.finally.completed (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at _runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m 180 |[39m         res[33m.[39mjson({ success[33m:[39m [36mtrue[39m[33m,[39m data[33m:[39m reports })[33m;[39m
+     [90m 181 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 182 |[39m         console[33m.[39merror([32m'❌ FETCH REPORTS ERROR:'[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 183 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m error[33m:[39m [32m'Failed to fetch reports'[39m })[33m;[39m
+     [90m 184 |[39m     }
+     [90m 185 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:182:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.error
+    ❌ UPDATE STATUS ERROR: Error: Update failed
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:224:71
+        at Generator.call (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at Generator._invoke [as next] (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at _next (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at new Promise (<anonymous>)
+        at Object.<anonymous> (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at Promise.finally.completed (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at _runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m 197 |[39m         res[33m.[39mjson({ success[33m:[39m [36mtrue[39m[33m,[39m data[33m:[39m report })[33m;[39m
+     [90m 198 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 199 |[39m         console[33m.[39merror([32m'❌ UPDATE STATUS ERROR:'[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 200 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m error[33m:[39m [32m'Failed to update status'[39m })[33m;[39m
+     [90m 201 |[39m     }
+     [90m 202 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:199:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.error
+    ❌ FETCH MY REPORTS ERROR: Error: Database error
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:274:51
+        at Generator.call (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at Generator._invoke [as next] (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at _next (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at new Promise (<anonymous>)
+        at Object.<anonymous> (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\test\support.test.js:2:1)
+        at Promise.finally.completed (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at _runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m 213 |[39m         res[33m.[39mjson({ success[33m:[39m [36mtrue[39m[33m,[39m data[33m:[39m reports })[33m;[39m
+     [90m 214 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 215 |[39m         console[33m.[39merror([32m'❌ FETCH MY REPORTS ERROR:'[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 216 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m error[33m:[39m [32m'Failed to fetch user reports'[39m })[33m;[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:215:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+PASS test/support.test.js
+  Support Routes
+    POST /api/support/query
+      √ should submit a general support query successfully (75 ms)
+      √ should handle query submission with missing name (6 ms)
+      √ should handle database errors gracefully (15 ms)
+    POST /api/support/dispute
+      √ should submit a dispute successfully (5 ms)
+      √ should handle dispute submission errors (8 ms)
+    GET /api/support/all-reports
+      √ should fetch all reports successfully (3 ms)
+      √ should handle fetch errors (5 ms)
+    PUT /api/support/:id/status
+      √ should update complaint status successfully (4 ms)
+      √ should handle update errors (5 ms)
+    GET /api/support/my-reports
+      √ should fetch user-specific reports successfully (3 ms)
+      √ should return error when email is missing (3 ms)
+      √ should handle fetch errors (5 ms)
+    GET /api/support/advisory
+      √ should fetch advisories successfully (3 ms)
+
+Test Suites: 2 passed, 2 total
+Tests:       33 passed, 33 total
+Snapshots:   0 total
+Time:        3.097 s
+Ran all test suites matching test/.

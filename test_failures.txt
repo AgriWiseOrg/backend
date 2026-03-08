@@ -1,0 +1,712 @@
+
+> server@1.0.0 test
+> node node_modules/jest/bin/jest.js
+
+PASS __tests__/sample.test.js
+  √ sanity check (13 ms)
+
+PASS __tests__/qualityCalculator.test.js
+  QualityPriceCalculator Utility
+    √ should return base price when no quality params provided (14 ms)
+    √ should apply premium for Grade A (1 ms)
+    √ should apply penalty for Grade C (1 ms)
+    √ should apply moisture penalty manually (3 ms)
+    √ should apply damage penalty (1 ms)
+    √ should cap minimum price adjustment at 50%
+
+FAIL __tests__/product_model.test.js
+  ● Test suite failed to run
+
+    Cannot find module './models/Products' from '__tests__/product_model.test.js'
+
+    [0m [90m 1 |[39m [36mconst[39m mongoose [33m=[39m require([32m'mongoose'[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 2 |[39m [36mconst[39m [33mProduct[39m [33m=[39m require([32m'./models/Products'[39m)[33m;[39m [90m// Points to Products.js[39m
+     [90m   |[39m                 [31m[1m^[22m[39m
+     [90m 3 |[39m
+     [90m 4 |[39m describe([32m'Product Model Unit Tests'[39m[33m,[39m () [33m=>[39m {
+     [90m 5 |[39m     [0m
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:863:11)
+      at Object.require (__tests__/product_model.test.js:2:17)
+
+  console.log
+    [dotenv@17.2.3] injecting env (2) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+PASS __tests__/scheme.model.test.js
+  Scheme Model
+    √ should save valid scheme with defaults (35 ms)
+    √ should fail if name is missing (4 ms)
+
+PASS __tests__/farmingTip.model.test.js
+  FarmingTip Model
+    √ should save valid farming tip with defaults (33 ms)
+    √ should fail if title is missing (5 ms)
+    √ should fail if desc is missing (3 ms)
+
+PASS __tests__/govtScheme.model.test.js
+  GovtScheme Model
+    √ should save valid govt scheme (27 ms)
+    √ should fail if required fields are missing (4 ms)
+
+PASS __tests__/financeRequest.model.test.js
+  FinanceRequest Model
+    √ should save valid finance request (29 ms)
+    √ should fail if farmerEmail is missing (4 ms)
+    √ should fail if schemeName is missing (4 ms)
+
+PASS __tests__/predictionModel.test.js
+  PredictionModel Model
+    √ should create a valid prediction model (36 ms)
+    √ should fail validation without required fields (9 ms)
+    √ should enforcement uniqueness of crop (8 ms)
+
+  console.log
+    [dotenv@17.2.3] injecting env (2) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+  console.log
+    [dotenv@17.2.3] injecting env (2) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+  console.log
+    📂 Loading Market Data from CSV: C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\data\commodity_price.csv
+
+      at log (server.js:387:13)
+
+  console.log
+    🚀 Server running on http://localhost:5001
+
+      at Server.log (server.js:616:11)
+
+  console.log
+    ✅ Loaded 2733 records from CSV
+
+      at log (server.js:401:13)
+
+  console.log
+    🍃 MongoDB Connected Successfully
+
+      at log (server.js:40:23)
+
+  console.log
+    📬 NEW SUPPORT QUERY: {
+      name: 'Test Farmer',
+      email: 'farmer@test.com',
+      subject: 'Need help with crops',
+      message: 'How do I deal with pests?',
+      language: 'en'
+    }
+
+      at log (routes/support.js:127:13)
+
+  console.log
+    📬 NEW SUPPORT QUERY: {
+      name: undefined,
+      email: 'farmer@test.com',
+      subject: 'Test',
+      message: 'Test message',
+      language: 'en'
+    }
+
+      at log (routes/support.js:127:13)
+
+  console.log
+    📬 NEW SUPPORT QUERY: {
+      name: 'Test Farmer',
+      email: 'farmer@test.com',
+      subject: 'Test',
+      message: 'Test message',
+      language: undefined
+    }
+
+      at log (routes/support.js:127:13)
+
+  console.error
+    ❌ QUERY ERROR: Error: Database error
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:78:68
+        at Generator.call (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at Generator._invoke [as next] (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at _next (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at new Promise (<anonymous>)
+        at Object.<anonymous> (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at Promise.finally.completed (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at _runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m 142 |[39m         })[33m;[39m
+     [90m 143 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 144 |[39m         console[33m.[39merror([32m'❌ QUERY ERROR:'[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 145 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m error[33m:[39m [32m'Failed to save query'[39m })[33m;[39m
+     [90m 146 |[39m     }
+     [90m 147 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:144:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.log
+    ⚖️ NEW DISPUTE REPORTED: {
+      name: 'Test Farmer',
+      email: 'farmer@test.com',
+      buyerName: 'Test Buyer',
+      orderId: 'ORD-123',
+      issue: 'Delayed Payment',
+      details: 'Payment not received for 30 days'
+    }
+
+      at log (routes/support.js:153:13)
+
+  console.log
+    ⚖️ NEW DISPUTE REPORTED: {
+      name: 'Test Farmer',
+      email: 'farmer@test.com',
+      buyerName: 'Test Buyer',
+      orderId: 'ORD-123',
+      issue: 'Quality Dispute',
+      details: 'Product quality not as agreed'
+    }
+
+      at log (routes/support.js:153:13)
+
+  console.error
+    ❌ DISPUTE ERROR: Error: Save failed
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:135:68
+        at Generator.call (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at Generator._invoke [as next] (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at _next (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at new Promise (<anonymous>)
+        at Object.<anonymous> (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at Promise.finally.completed (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at _runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m 168 |[39m         })[33m;[39m
+     [90m 169 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 170 |[39m         console[33m.[39merror([32m'❌ DISPUTE ERROR:'[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 171 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m error[33m:[39m [32m'Failed to register dispute'[39m })[33m;[39m
+     [90m 172 |[39m     }
+     [90m 173 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:170:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.error
+    ❌ FETCH REPORTS ERROR: Error: Database error
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:185:51
+        at Generator.call (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at Generator._invoke [as next] (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at _next (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at new Promise (<anonymous>)
+        at Object.<anonymous> (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at Promise.finally.completed (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at _runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m 180 |[39m         res[33m.[39mjson({ success[33m:[39m [36mtrue[39m[33m,[39m data[33m:[39m reports })[33m;[39m
+     [90m 181 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 182 |[39m         console[33m.[39merror([32m'❌ FETCH REPORTS ERROR:'[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 183 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m error[33m:[39m [32m'Failed to fetch reports'[39m })[33m;[39m
+     [90m 184 |[39m     }
+     [90m 185 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:182:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.log
+    📂 Loading Market Data from CSV: C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\data\commodity_price.csv
+
+      at log (server.js:387:13)
+
+  console.error
+    ❌ UPDATE STATUS ERROR: Error: Update failed
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:224:71
+        at Generator.call (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at Generator._invoke [as next] (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at _next (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at new Promise (<anonymous>)
+        at Object.<anonymous> (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at Promise.finally.completed (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at _runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m 197 |[39m         res[33m.[39mjson({ success[33m:[39m [36mtrue[39m[33m,[39m data[33m:[39m report })[33m;[39m
+     [90m 198 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 199 |[39m         console[33m.[39merror([32m'❌ UPDATE STATUS ERROR:'[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 200 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m error[33m:[39m [32m'Failed to update status'[39m })[33m;[39m
+     [90m 201 |[39m     }
+     [90m 202 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:199:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.log
+    🚀 Server running on http://localhost:5001
+
+      at Server.log (server.js:616:11)
+
+  console.error
+    ❌ FETCH MY REPORTS ERROR: Error: Database error
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:274:51
+        at Generator.call (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at Generator._invoke [as next] (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at asyncGeneratorStep (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at _next (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at new Promise (<anonymous>)
+        at Object.<anonymous> (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\__tests__\support.test.js:2:1)
+        at Promise.finally.completed (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at _runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m 213 |[39m         res[33m.[39mjson({ success[33m:[39m [36mtrue[39m[33m,[39m data[33m:[39m reports })[33m;[39m
+     [90m 214 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 215 |[39m         console[33m.[39merror([32m'❌ FETCH MY REPORTS ERROR:'[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 216 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m error[33m:[39m [32m'Failed to fetch user reports'[39m })[33m;[39m
+     [90m 217 |[39m     }
+     [90m 218 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:215:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.log
+    ✅ Loaded 2733 records from CSV
+
+      at log (server.js:401:13)
+
+PASS __tests__/support.test.js
+  Support Routes
+    POST /api/support/query
+      √ should submit a general support query successfully (85 ms)
+      √ should handle query submission with missing name (7 ms)
+      √ should handle database errors gracefully (11 ms)
+    POST /api/support/dispute
+      √ should submit a dispute successfully (6 ms)
+      √ should handle dispute submission errors (9 ms)
+    GET /api/support/all-reports
+      √ should fetch all reports successfully (4 ms)
+      √ should handle fetch errors (7 ms)
+    PUT /api/support/:id/status
+      √ should update complaint status successfully (5 ms)
+      √ should handle update errors (8 ms)
+    GET /api/support/my-reports
+      √ should fetch user-specific reports successfully (5 ms)
+      √ should return error when email is missing (3 ms)
+      √ should handle fetch errors (11 ms)
+    GET /api/support/advisory
+      √ should fetch advisories successfully (4 ms)
+
+  console.log
+    🍃 MongoDB Connected Successfully
+
+      at log (server.js:40:23)
+
+  console.error
+    ❌ WEATHER API ERROR: Weather API unavailable
+
+    [0m [90m 290 |[39m         })[33m;[39m
+     [90m 291 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 292 |[39m         console[33m.[39merror([32m'❌ WEATHER API ERROR:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 293 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m message[33m:[39m [32m'Failed to fetch regional weather intelligence.'[39m })[33m;[39m
+     [90m 294 |[39m     }
+     [90m 295 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:292:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+  console.error
+    ❌ WEATHER API ERROR: ETIMEDOUT
+
+    [0m [90m 290 |[39m         })[33m;[39m
+     [90m 291 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 292 |[39m         console[33m.[39merror([32m'❌ WEATHER API ERROR:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 293 |[39m         res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m message[33m:[39m [32m'Failed to fetch regional weather intelligence.'[39m })[33m;[39m
+     [90m 294 |[39m     }
+     [90m 295 |[39m })[33m;[39m[0m
+
+      at error (routes/support.js:292:17)
+      at Generator.call (routes/support.js:2:1)
+      at Generator._invoke [as throw] (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+      at asyncGeneratorStep (routes/support.js:2:1)
+
+PASS __tests__/weather.test.js
+  Weather Routes
+    GET /api/support/weather
+      √ should fetch weather data with default parameters (38 ms)
+      √ should fetch weather data for specific location (6 ms)
+      Crop-specific advisories
+        √ should provide Rice-specific advisory for high heat (4 ms)
+        √ should provide Rice-specific advisory for rain (4 ms)
+        √ should provide Wheat-specific advisory for high temperature (4 ms)
+        √ should provide Wheat-specific advisory for rain (4 ms)
+        √ should provide Tomato-specific advisory for extreme heat (4 ms)
+        √ should provide Tomato-specific advisory for rain/humidity (4 ms)
+        √ should provide general advisory for normal conditions (4 ms)
+        √ should provide critical alert for extreme heat (4 ms)
+        √ should provide warning for precipitation (3 ms)
+      Multilingual support
+        √ should return advisory in Hindi (3 ms)
+        √ should return advisory in Telugu (4 ms)
+        √ should return advisory in Kannada (3 ms)
+        √ should default to English when language not specified (3 ms)
+      Error handling
+        √ should handle weather API errors gracefully (37 ms)
+        √ should handle network timeout errors (6 ms)
+      Data validation
+        √ should include rain probability data (3 ms)
+        √ should include 5-day forecast (3 ms)
+        √ should include current weather parameters (3 ms)
+
+FAIL __tests__/product_route.test.js
+  Product API Route Tests
+    × GET /api/products - should return all crops (3 ms)
+    × POST /api/products - should successfully list a new crop
+    × POST /api/products - should return 400 for negative price (1 ms)
+
+  ● Product API Route Tests › GET /api/products - should return all crops
+
+    TypeError: app.address is not a function
+
+    [0m [90m 18 |[39m     [90m// UNIT TEST: GET ALL PRODUCTS[39m
+     [90m 19 |[39m     test([32m'GET /api/products - should return all crops'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 20 |[39m         [36mconst[39m response [33m=[39m [36mawait[39m request(app)[33m.[39m[36mget[39m([32m'/api/products'[39m)[33m;[39m
+     [90m    |[39m                                             [31m[1m^[22m[39m
+     [90m 21 |[39m         
+     [90m 22 |[39m         expect(response[33m.[39mstatus)[33m.[39mtoBe([35m200[39m)[33m;[39m
+     [90m 23 |[39m         expect([33mArray[39m[33m.[39misArray(response[33m.[39mbody))[33m.[39mtoBe([36mtrue[39m)[33m;[39m[0m
+
+      at Test.serverAddress (node_modules/supertest/lib/test.js:61:22)
+      at new Test (node_modules/supertest/lib/test.js:49:14)
+      at Object.obj.<computed> [as get] (node_modules/supertest/index.js:40:18)
+      at get (__tests__/product_route.test.js:20:45)
+      at Generator.call (__tests__/product_route.test.js:2:1)
+      at Generator._invoke [as next] (__tests__/product_route.test.js:2:1)
+      at asyncGeneratorStep (__tests__/product_route.test.js:2:1)
+      at asyncGeneratorStep (__tests__/product_route.test.js:2:1)
+      at _next (__tests__/product_route.test.js:2:1)
+      at Object.<anonymous> (__tests__/product_route.test.js:2:1)
+
+  ● Product API Route Tests › POST /api/products - should successfully list a new crop
+
+    TypeError: app.address is not a function
+
+    [0m [90m 37 |[39m
+     [90m 38 |[39m         [36mconst[39m response [33m=[39m [36mawait[39m request(app)
+    [31m[1m>[22m[39m[90m 39 |[39m             [33m.[39mpost([32m'/api/products'[39m)
+     [90m    |[39m              [31m[1m^[22m[39m
+     [90m 40 |[39m             [33m.[39msend(newCrop)[33m;[39m
+     [90m 41 |[39m
+     [90m 42 |[39m         expect(response[33m.[39mstatus)[33m.[39mtoBe([35m201[39m)[33m;[39m [90m// 201 Created[39m[0m
+
+      at Test.serverAddress (node_modules/supertest/lib/test.js:61:22)
+      at new Test (node_modules/supertest/lib/test.js:49:14)
+      at Object.obj.<computed> [as post] (node_modules/supertest/index.js:40:18)
+      at post (__tests__/product_route.test.js:39:14)
+      at Generator.call (__tests__/product_route.test.js:2:1)
+      at Generator._invoke [as next] (__tests__/product_route.test.js:2:1)
+      at asyncGeneratorStep (__tests__/product_route.test.js:2:1)
+      at asyncGeneratorStep (__tests__/product_route.test.js:2:1)
+      at _next (__tests__/product_route.test.js:2:1)
+      at Object.<anonymous> (__tests__/product_route.test.js:2:1)
+
+  ● Product API Route Tests › POST /api/products - should return 400 for negative price
+
+    TypeError: app.address is not a function
+
+    [0m [90m 56 |[39m
+     [90m 57 |[39m         [36mconst[39m response [33m=[39m [36mawait[39m request(app)
+    [31m[1m>[22m[39m[90m 58 |[39m             [33m.[39mpost([32m'/api/products'[39m)
+     [90m    |[39m              [31m[1m^[22m[39m
+     [90m 59 |[39m             [33m.[39msend(badCrop)[33m;[39m
+     [90m 60 |[39m
+     [90m 61 |[39m         expect(response[33m.[39mstatus)[33m.[39mtoBe([35m400[39m)[33m;[39m [90m// Should fail validation[39m[0m
+
+      at Test.serverAddress (node_modules/supertest/lib/test.js:61:22)
+      at new Test (node_modules/supertest/lib/test.js:49:14)
+      at Object.obj.<computed> [as post] (node_modules/supertest/index.js:40:18)
+      at post (__tests__/product_route.test.js:58:14)
+      at Generator.call (__tests__/product_route.test.js:2:1)
+      at Generator._invoke [as next] (__tests__/product_route.test.js:2:1)
+      at asyncGeneratorStep (__tests__/product_route.test.js:2:1)
+      at asyncGeneratorStep (__tests__/product_route.test.js:2:1)
+      at _next (__tests__/product_route.test.js:2:1)
+      at Object.<anonymous> (__tests__/product_route.test.js:2:1)
+
+FAIL __tests__/marketRoutes.test.js (5.148 s)
+  Market Routes (server.js)
+    × GET /api/market/prices should return list of market prices (3 ms)
+    × GET /api/market/crops should return list of crops (1 ms)
+    × GET /api/market/history should return history for a crop
+    × GET /api/market/demand should return demand data
+    × POST /api/predict-price should return prediction
+    × POST /api/market/quality-price should return calculated price
+    × GET /api/market/forecast-30-days should return forecast
+
+  ● Market Routes (server.js) › GET /api/market/prices should return list of market prices
+
+    TypeError: app.address is not a function
+
+    [0m [90m 25 |[39m     [90m// GET /api/market/prices[39m
+     [90m 26 |[39m     test([32m'GET /api/market/prices should return list of market prices'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 27 |[39m         [36mconst[39m res [33m=[39m [36mawait[39m request(app)[33m.[39m[36mget[39m([32m'/api/market/prices'[39m)[33m;[39m
+     [90m    |[39m                                        [31m[1m^[22m[39m
+     [90m 28 |[39m         expect(res[33m.[39mstatusCode)[33m.[39mtoBe([35m200[39m)[33m;[39m
+     [90m 29 |[39m         expect([33mArray[39m[33m.[39misArray(res[33m.[39mbody))[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m 30 |[39m         [36mif[39m (res[33m.[39mbody[33m.[39mlength [33m>[39m [35m0[39m) {[0m
+
+      at Test.serverAddress (node_modules/supertest/lib/test.js:61:22)
+      at new Test (node_modules/supertest/lib/test.js:49:14)
+      at Object.obj.<computed> [as get] (node_modules/supertest/index.js:40:18)
+      at get (__tests__/marketRoutes.test.js:27:40)
+      at Generator.call (__tests__/marketRoutes.test.js:2:1)
+      at Generator._invoke [as next] (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at _next (__tests__/marketRoutes.test.js:2:1)
+      at Object.<anonymous> (__tests__/marketRoutes.test.js:2:1)
+
+  ● Market Routes (server.js) › GET /api/market/crops should return list of crops
+
+    TypeError: app.address is not a function
+
+    [0m [90m 37 |[39m     [90m// GET /api/market/crops[39m
+     [90m 38 |[39m     test([32m'GET /api/market/crops should return list of crops'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 39 |[39m         [36mconst[39m res [33m=[39m [36mawait[39m request(app)[33m.[39m[36mget[39m([32m'/api/market/crops'[39m)[33m;[39m
+     [90m    |[39m                                        [31m[1m^[22m[39m
+     [90m 40 |[39m         expect(res[33m.[39mstatusCode)[33m.[39mtoBe([35m200[39m)[33m;[39m
+     [90m 41 |[39m         expect([33mArray[39m[33m.[39misArray(res[33m.[39mbody))[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m 42 |[39m     })[33m;[39m[0m
+
+      at Test.serverAddress (node_modules/supertest/lib/test.js:61:22)
+      at new Test (node_modules/supertest/lib/test.js:49:14)
+      at Object.obj.<computed> [as get] (node_modules/supertest/index.js:40:18)
+      at get (__tests__/marketRoutes.test.js:39:40)
+      at Generator.call (__tests__/marketRoutes.test.js:2:1)
+      at Generator._invoke [as next] (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at _next (__tests__/marketRoutes.test.js:2:1)
+      at Object.<anonymous> (__tests__/marketRoutes.test.js:2:1)
+
+  ● Market Routes (server.js) › GET /api/market/history should return history for a crop
+
+    TypeError: app.address is not a function
+
+    [0m [90m 45 |[39m     test([32m'GET /api/market/history should return history for a crop'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m 46 |[39m         [90m// Assuming 'Wheat' exists or fallback handles it[39m
+    [31m[1m>[22m[39m[90m 47 |[39m         [36mconst[39m res [33m=[39m [36mawait[39m request(app)[33m.[39m[36mget[39m([32m'/api/market/history?crop=Wheat'[39m)[33m;[39m
+     [90m    |[39m                                        [31m[1m^[22m[39m
+     [90m 48 |[39m         [36mif[39m (res[33m.[39mstatusCode [33m===[39m [35m200[39m) {
+     [90m 49 |[39m             expect(res[33m.[39mbody)[33m.[39mtoHaveProperty([32m'data'[39m)[33m;[39m
+     [90m 50 |[39m             expect([33mArray[39m[33m.[39misArray(res[33m.[39mbody[33m.[39mdata))[33m.[39mtoBe([36mtrue[39m)[33m;[39m[0m
+
+      at Test.serverAddress (node_modules/supertest/lib/test.js:61:22)
+      at new Test (node_modules/supertest/lib/test.js:49:14)
+      at Object.obj.<computed> [as get] (node_modules/supertest/index.js:40:18)
+      at get (__tests__/marketRoutes.test.js:47:40)
+      at Generator.call (__tests__/marketRoutes.test.js:2:1)
+      at Generator._invoke [as next] (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at _next (__tests__/marketRoutes.test.js:2:1)
+      at Object.<anonymous> (__tests__/marketRoutes.test.js:2:1)
+
+  ● Market Routes (server.js) › GET /api/market/demand should return demand data
+
+    TypeError: app.address is not a function
+
+    [0m [90m 58 |[39m     [90m// GET /api/market/demand[39m
+     [90m 59 |[39m     test([32m'GET /api/market/demand should return demand data'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 60 |[39m         [36mconst[39m res [33m=[39m [36mawait[39m request(app)[33m.[39m[36mget[39m([32m'/api/market/demand'[39m)[33m;[39m
+     [90m    |[39m                                        [31m[1m^[22m[39m
+     [90m 61 |[39m         [90m// It might be 500 if DemandForecast collection is empty/missing scheme, but let's check basic response[39m
+     [90m 62 |[39m         [90m// server.js returns 200 with empty array if no data finding succeeds[39m
+     [90m 63 |[39m         [36mif[39m (res[33m.[39mstatusCode [33m===[39m [35m200[39m) {[0m
+
+      at Test.serverAddress (node_modules/supertest/lib/test.js:61:22)
+      at new Test (node_modules/supertest/lib/test.js:49:14)
+      at Object.obj.<computed> [as get] (node_modules/supertest/index.js:40:18)
+      at get (__tests__/marketRoutes.test.js:60:40)
+      at Generator.call (__tests__/marketRoutes.test.js:2:1)
+      at Generator._invoke [as next] (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at _next (__tests__/marketRoutes.test.js:2:1)
+      at Object.<anonymous> (__tests__/marketRoutes.test.js:2:1)
+
+  ● Market Routes (server.js) › POST /api/predict-price should return prediction
+
+    TypeError: app.address is not a function
+
+    [0m [90m 69 |[39m     test([32m'POST /api/predict-price should return prediction'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m 70 |[39m         [36mconst[39m res [33m=[39m [36mawait[39m request(app)
+    [31m[1m>[22m[39m[90m 71 |[39m             [33m.[39mpost([32m'/api/predict-price'[39m)
+     [90m    |[39m              [31m[1m^[22m[39m
+     [90m 72 |[39m             [33m.[39msend({
+     [90m 73 |[39m                 product[33m:[39m [32m'Wheat'[39m[33m,[39m
+     [90m 74 |[39m                 region[33m:[39m [32m'North India'[39m[33m,[39m[0m
+
+      at Test.serverAddress (node_modules/supertest/lib/test.js:61:22)
+      at new Test (node_modules/supertest/lib/test.js:49:14)
+      at Object.obj.<computed> [as post] (node_modules/supertest/index.js:40:18)
+      at post (__tests__/marketRoutes.test.js:71:14)
+      at Generator.call (__tests__/marketRoutes.test.js:2:1)
+      at Generator._invoke [as next] (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at _next (__tests__/marketRoutes.test.js:2:1)
+      at Object.<anonymous> (__tests__/marketRoutes.test.js:2:1)
+
+  ● Market Routes (server.js) › POST /api/market/quality-price should return calculated price
+
+    TypeError: app.address is not a function
+
+    [0m [90m 84 |[39m     test([32m'POST /api/market/quality-price should return calculated price'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m 85 |[39m         [36mconst[39m res [33m=[39m [36mawait[39m request(app)
+    [31m[1m>[22m[39m[90m 86 |[39m             [33m.[39mpost([32m'/api/market/quality-price'[39m)
+     [90m    |[39m              [31m[1m^[22m[39m
+     [90m 87 |[39m             [33m.[39msend({
+     [90m 88 |[39m                 crop[33m:[39m [32m'Wheat'[39m[33m,[39m
+     [90m 89 |[39m                 grade[33m:[39m [32m'A'[39m[33m,[39m[0m
+
+      at Test.serverAddress (node_modules/supertest/lib/test.js:61:22)
+      at new Test (node_modules/supertest/lib/test.js:49:14)
+      at Object.obj.<computed> [as post] (node_modules/supertest/index.js:40:18)
+      at post (__tests__/marketRoutes.test.js:86:14)
+      at Generator.call (__tests__/marketRoutes.test.js:2:1)
+      at Generator._invoke [as next] (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at _next (__tests__/marketRoutes.test.js:2:1)
+      at Object.<anonymous> (__tests__/marketRoutes.test.js:2:1)
+
+  ● Market Routes (server.js) › GET /api/market/forecast-30-days should return forecast
+
+    TypeError: app.address is not a function
+
+    [0m [90m  98 |[39m     [90m// GET /api/market/forecast-30-days[39m
+     [90m  99 |[39m     test([32m'GET /api/market/forecast-30-days should return forecast'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 100 |[39m         [36mconst[39m res [33m=[39m [36mawait[39m request(app)[33m.[39m[36mget[39m([32m'/api/market/forecast-30-days?crop=Wheat'[39m)[33m;[39m
+     [90m     |[39m                                        [31m[1m^[22m[39m
+     [90m 101 |[39m         expect(res[33m.[39mstatusCode)[33m.[39mtoBe([35m200[39m)[33m;[39m
+     [90m 102 |[39m         expect(res[33m.[39mbody)[33m.[39mtoHaveProperty([32m'data'[39m)[33m;[39m
+     [90m 103 |[39m         expect([33mArray[39m[33m.[39misArray(res[33m.[39mbody[33m.[39mdata))[33m.[39mtoBe([36mtrue[39m)[33m;[39m[0m
+
+      at Test.serverAddress (node_modules/supertest/lib/test.js:61:22)
+      at new Test (node_modules/supertest/lib/test.js:49:14)
+      at Object.obj.<computed> [as get] (node_modules/supertest/index.js:40:18)
+      at get (__tests__/marketRoutes.test.js:100:40)
+      at Generator.call (__tests__/marketRoutes.test.js:2:1)
+      at Generator._invoke [as next] (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at asyncGeneratorStep (__tests__/marketRoutes.test.js:2:1)
+      at _next (__tests__/marketRoutes.test.js:2:1)
+      at Object.<anonymous> (__tests__/marketRoutes.test.js:2:1)
+
+A worker process has failed to exit gracefully and has been force exited. This is likely caused by tests leaking due to improper teardown. Try running with --detectOpenHandles to find leaks. Active timers can also cause this, ensure that .unref() was called on them.
+Test Suites: 3 failed, 9 passed, 12 total
+Tests:       10 failed, 53 passed, 63 total
+Snapshots:   0 total
+Time:        6.962 s
+Ran all test suites.

@@ -17,7 +17,9 @@
     "csv-parser": "^3.2.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "mongoose": "^9.2.4"
+    "mongoose": "^9.1.5",
+    "socket.io": "^4.8.3",
+    "stripe": "^20.4.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.29.0",

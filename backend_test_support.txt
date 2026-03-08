@@ -1,0 +1,12 @@
+
+> server@1.0.0 test
+> node node_modules/jest/bin/jest.js test/support.test.js --no-color
+
+● Validation Error:
+
+  Module C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo\node_modules\jest-circus\build\runner.js in the testRunner option was not found.
+         <rootDir> is: C:\Users\prana\OneDrive\Desktop\AgriWise\Temp\backdemo
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration
+
