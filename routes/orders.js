@@ -9,7 +9,16 @@ router.get('/farmer/:email', async (req, res) => {
     try {
         const email = req.params.email.toLowerCase();
         const orders = await Order.find({ farmerEmail: email }).sort({ createdAt: -1 });
-        res.status(200).json(orders);
+
+        // Lookup names
+        const enrichedOrders = await Promise.all(orders.map(async (order) => {
+            const buyerUser = await User.findOne({ email: order.buyerEmail });
+            const oData = order.toObject();
+            oData.buyerName = buyerUser?.profile?.name || order.buyerEmail.split('@')[0];
+            return oData;
+        }));
+
+        res.status(200).json(enrichedOrders);
     } catch (error) {
         console.error("GET FARMER ORDERS ERROR:", error);
         res.status(500).json({ message: "Error fetching orders", error: error.message });
@@ -21,7 +30,16 @@ router.get('/buyer/:email', async (req, res) => {
     try {
         const email = req.params.email.toLowerCase();
         const orders = await Order.find({ buyerEmail: email }).sort({ createdAt: -1 });
-        res.status(200).json(orders);
+
+        // Lookup names
+        const enrichedOrders = await Promise.all(orders.map(async (order) => {
+            const farmerUser = await User.findOne({ email: order.farmerEmail });
+            const oData = order.toObject();
+            oData.farmerName = farmerUser?.profile?.name || order.farmerEmail.split('@')[0];
+            return oData;
+        }));
+
+        res.status(200).json(enrichedOrders);
     } catch (error) {
         console.error("GET BUYER ORDERS ERROR:", error);
         res.status(500).json({ message: "Error fetching orders", error: error.message });
@@ -62,7 +80,16 @@ router.get('/:id', async (req, res) => {
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }
-        res.status(200).json(order);
+
+        // Lookup real names
+        const buyerUser = await User.findOne({ email: order.buyerEmail });
+        const farmerUser = await User.findOne({ email: order.farmerEmail });
+
+        const orderData = order.toObject();
+        orderData.buyerName = buyerUser?.profile?.name || order.buyerEmail.split('@')[0];
+        orderData.farmerName = farmerUser?.profile?.name || order.farmerEmail.split('@')[0];
+
+        res.status(200).json(orderData);
     } catch (error) {
         console.error("GET ORDER ERROR:", error);
         res.status(500).json({ message: "Error fetching order details", error: error.message });
