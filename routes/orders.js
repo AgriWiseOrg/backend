@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
+const Product = require('../models/Products');
+const User = require('../models/User');
 
 // GET all orders for a specific farmer mail
 router.get('/farmer/:email', async (req, res) => {
@@ -70,18 +72,37 @@ router.get('/:id', async (req, res) => {
 // CREATE new orders from Cart (Split by Farmer)
 router.post('/', async (req, res) => {
     try {
-        const { buyerEmail, items } = req.body;
+        const { buyerEmail, items, deliveryDetails } = req.body;
 
-        if (!buyerEmail || !items || items.length === 0) {
-            return res.status(400).json({ message: "Buyer email and items are required" });
+        if (!buyerEmail || !items || items.length === 0 || !deliveryDetails) {
+            return res.status(400).json({ message: "Buyer email, items, and delivery details are required" });
         }
 
         // Group cart items by farmer email
         const ordersByFarmer = {};
 
-        items.forEach(item => {
-            // Fallback for missing farmer info
-            const farmerEmail = item.farmerEmail || `${item.farmerName ? item.farmerName.replace(/\s+/g, '').toLowerCase() : 'verifiedfarmer'}@agriwise.com`;
+        for (const item of items) {
+            let farmerEmail = item.farmerEmail;
+
+            // If missing, look it up from the Product and User models
+            if (!farmerEmail && item.productId) {
+                try {
+                    const product = await Product.findById(item.productId);
+                    if (product && product.farmerId) {
+                        const user = await User.findById(product.farmerId);
+                        if (user && user.email) {
+                            farmerEmail = user.email;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error looking up true farmer email:", e);
+                }
+            }
+
+            // Fallback if still missing
+            if (!farmerEmail) {
+                farmerEmail = `${item.farmerName ? item.farmerName.replace(/\s+/g, '').toLowerCase() : 'verifiedfarmer'}@agriwise.com`;
+            }
 
             if (!ordersByFarmer[farmerEmail]) {
                 ordersByFarmer[farmerEmail] = {
@@ -92,7 +113,7 @@ router.post('/', async (req, res) => {
             }
             ordersByFarmer[farmerEmail].items.push(item);
             ordersByFarmer[farmerEmail].totalAmount += (item.price * item.quantity);
-        });
+        }
 
         // Create individual Order documents for each farmer
         const createdOrders = [];
@@ -102,6 +123,7 @@ router.post('/', async (req, res) => {
                 farmerEmail,
                 items: data.items,
                 totalAmount: data.totalAmount,
+                deliveryDetails,
                 status: 'Pending'
             });
             await newOrder.save();
