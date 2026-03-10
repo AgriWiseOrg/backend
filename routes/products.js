@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Products');
+const User = require('../models/User');
 
 // 1. GET ALL PRODUCTS (For Marketplace.jsx)
 router.get('/', async (req, res) => {
@@ -71,8 +72,12 @@ router.post('/:id/review', async (req, res) => {
             return res.status(404).json({ message: "Product not found" });
         }
 
+        // Fetch user profile for name
+        const user = await User.findById(userId);
+        const displayName = user?.profile?.name || userEmail || "Verified Buyer";
+
         const review = {
-            user: userEmail,
+            user: displayName,
             userId,
             rating: Number(rating),
             comment,
