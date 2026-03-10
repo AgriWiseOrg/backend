@@ -620,9 +620,20 @@ app.post('/api/market/quality-price', (req, res) => {
 
 // ================= SERVER START =================
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  
+  // Keep-alive ping to prevent Render free tier sleep
+  const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+  setInterval(async () => {
+    try {
+      await axios.get(`${RENDER_URL}/api/market/crops`);
+      console.log(`⏱️ Keep-alive ping sent to ${RENDER_URL}/api/market/crops`);
+    } catch (error) {
+      console.error('Keep-alive ping failed:', error.message);
+    }
+  }, 5 * 60 * 1000); // Ping every 5 minutes (300000 ms)
+});
 
 // Export app for testing
 module.exports = app;
