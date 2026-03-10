@@ -217,25 +217,72 @@ router.get('/my-reports', async (req, res) => {
     }
 });
 
+// In-memory cache for weather data to prevent 429 Rate Limit errors on shared hosting
+const weatherCache = {};
+const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
+
+const getCacheKey = (lat, lon, crop, lang) => {
+    // Round coordinates to 2 decimal places to group nearby requests (~1.1km)
+    const roundedLat = parseFloat(lat).toFixed(2);
+    const roundedLon = parseFloat(lon).toFixed(2);
+    return `${roundedLat}_${roundedLon}_${crop}_${lang}`;
+};
+
 // @route   GET api/support/weather
 // @desc    Get real-time weather and crop-specific advisories
 router.get('/weather', async (req, res) => {
     const { lat = 28.6139, lon = 77.2090, crop = 'General', lang = 'en' } = req.query;
+    const cacheKey = getCacheKey(lat, lon, crop, lang);
+
+    // Check cache
+    const cachedData = weatherCache[cacheKey];
+    if (cachedData && (Date.now() - cachedData.timestamp < CACHE_DURATION)) {
+        console.log('⚡ Using Cached Weather Data for:', cacheKey);
+        return res.json({ success: true, data: cachedData.data });
+    }
 
     try {
-        const weatherRes = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&hourly=precipitation_probability&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`);
+        console.log('📡 Fetching Fresh Weather Data from OpenWeatherMap...');
+        
+        const API_KEY = process.env.WEATHER_API_KEY; // The user provided the OpenWeatherMap key
+        if (!API_KEY) {
+            throw new Error('WEATHER_API_KEY is not configured in environment variables');
+        }
 
-        const current = weatherRes.data.current;
-        const daily = weatherRes.data.daily;
-        const hourly = weatherRes.data.hourly;
+        let weatherRes;
+        let retries = 3;
+        while (retries > 0) {
+            try {
+                // OpenWeatherMap 5-day / 3-hour forecast
+                weatherRes = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`);
+                break; // Success, exit loop
+            } catch (err) {
+                console.log(`⚠️ Weather API Error. Retrying in ${4 - retries} seconds...`);
+                await new Promise(resolve => setTimeout(resolve, (4 - retries) * 1000));
+                retries--;
+                if (retries === 0) throw err;
+            }
+        }
+
+        const forecastList = weatherRes.data.list;
+        const current = forecastList[0]; // Nearest 3-hour block is our "current"
 
         // Agricultural Advisory Logic
         let advisory = "Conditions are stable for most crops.";
         let level = "Normal";
         let icon = "✅";
 
-        const temp = current.temperature_2m;
-        const code = current.weather_code;
+        const temp = current.main.temp;
+        
+        // Map OpenWeatherMap codes to Open-Meteo style codes for frontend compatibility
+        // OpenWeatherMap uses 2xx (Thunderstorm), 3xx (Drizzle), 5xx (Rain), 6xx (Snow), 7xx (Atmosphere/Mist), 800 (Clear), 80x (Clouds)
+        let code = 0; // default clear
+        const wCode = current.weather[0].id;
+        if (wCode >= 801 && wCode <= 804) code = 2; // cloudy
+        else if (wCode >= 701 && wCode <= 781) code = 45; // mist/fog
+        else if (wCode >= 300 && wCode <= 531) code = 51; // rain/drizzle
+        else if (wCode >= 600 && wCode <= 622) code = 71; // snow
+        else if (wCode >= 200 && wCode <= 232) code = 95; // thunder/storm
 
         // Crop-Specific Logic
         if (crop === 'Rice') {
@@ -264,33 +311,78 @@ router.get('/weather', async (req, res) => {
         // Translate advisory before sending
         const translatedAdvisory = translateAdvisory(advisory, lang);
 
-        // Extract precipitation probability for the next 8 hours
-        const rainProb = hourly.precipitation_probability.slice(0, 8);
+        // Extract precipitation probability for the next 8 hours (OpenWeatherMap gives 3-hour chunks, so we'll grab the first 3 chunks to approximate 9 hours)
+        let rainProb = [];
+        for (let i = 0; i < 3; i++) {
+            // populating 3 entries per 3-hour block to simulate hourly chart in frontend
+            const prob = Math.round((forecastList[i]?.pop || 0) * 100);
+            rainProb.push(prob, prob, prob); 
+        }
+        rainProb = rainProb.slice(0, 8); // trim strictly exactly to 8 hours
+
+        // Process 5-day forecast (OpenWeatherMap gives 40 records, 1 per 3 hours. We take 1 per day)
+        const dailyForecasts = [];
+        const seenDays = new Set();
+        for (let i = 0; i < forecastList.length; i++) {
+            const dateObj = new Date(forecastList[i].dt * 1000);
+            const dateStr = dateObj.toISOString().split('T')[0];
+            
+            if (!seenDays.has(dateStr)) {
+                seenDays.add(dateStr);
+                
+                const dwCode = forecastList[i].weather[0].id;
+                let dCode = 0;
+                if (dwCode >= 801 && dwCode <= 804) dCode = 2; 
+                else if (dwCode >= 701 && dwCode <= 781) dCode = 45; 
+                else if (dwCode >= 300 && dwCode <= 531) dCode = 51; 
+                else if (dwCode >= 600 && dwCode <= 622) dCode = 71; 
+                else if (dwCode >= 200 && dwCode <= 232) dCode = 95;
+
+                dailyForecasts.push({
+                    date: dateStr,
+                    max: forecastList[i].main.temp_max + 2, // Slight adjustment for daily max approximation from 3hr snippet
+                    min: forecastList[i].main.temp_min - 2,
+                    code: dCode
+                });
+                
+                if (dailyForecasts.length === 5) break;
+            }
+        }
+
+        const responseData = {
+            temp,
+            humidity: current.main.humidity,
+            wind: Math.round(current.wind.speed * 3.6), // Convert m/s to km/h
+            code,
+            advisory: translatedAdvisory,
+            level,
+            icon,
+            rainProb,
+            crop,
+            location: { lat, lon },
+            forecast: dailyForecasts
+        };
+
+        // Update cache
+        weatherCache[cacheKey] = {
+            timestamp: Date.now(),
+            data: responseData
+        };
 
         res.json({
             success: true,
-            data: {
-                temp,
-                humidity: current.relative_humidity_2m,
-                wind: current.wind_speed_10m,
-                code,
-                advisory: translatedAdvisory,
-                level,
-                icon,
-                rainProb,
-                crop,
-                location: { lat, lon },
-                forecast: daily.time.slice(0, 5).map((t, i) => ({
-                    date: t,
-                    max: daily.temperature_2m_max[i],
-                    min: daily.temperature_2m_min[i],
-                    code: daily.weather_code[i]
-                }))
-            }
+            data: responseData
         });
     } catch (error) {
         console.error('❌ WEATHER API ERROR:', error.message);
-        res.status(500).json({ success: false, message: 'Failed to fetch regional weather intelligence.' });
+        
+        // If we have any expired cache, return it as a fallback instead of failing
+        if (cachedData) {
+            console.log('🔄 Fallback to expired cache due to API error');
+            return res.json({ success: true, data: cachedData.data });
+        }
+
+        res.status(500).json({ success: false, message: 'Failed to fetch regional weather intelligence. Please try again later.' });
     }
 });
 

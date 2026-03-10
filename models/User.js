@@ -10,6 +10,21 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  phone: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+  otp: {
+    type: String
+  },
+  otpExpires: {
+    type: Date
+  },
   role: {
     type: String,
     enum: ['farmer', 'buyer', 'admin'],

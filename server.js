@@ -5,6 +5,8 @@ const axios = require('axios');
 const path = require('path');
 const http = require('http');
 const socketIo = require('socket.io');
+const crypto = require('crypto');
+// Email OTP removed — direct registration enabled
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
@@ -73,19 +75,26 @@ mongoose.connect(process.env.MONGO_URI)
 
 // ================= AUTHENTICATION =================
 
-// Register
+// Register (direct — no OTP)
 app.post('/api/auth/register', async (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, password, role, phone } = req.body;
+
+  if (!email || !password || !phone || !role) {
+    return res.status(400).json({ error: 'Email, password, phone, and role are required' });
+  }
+
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
+      return res.status(400).json({ error: 'User with this email already exists' });
     }
 
     const user = new User({
       email,
-      password, // Reminder: Hash this with bcrypt in production!
-      role: role.toLowerCase()
+      phone,
+      password,
+      role: role.toLowerCase(),
+      isEmailVerified: true
     });
 
     await user.save();
@@ -93,15 +102,10 @@ app.post('/api/auth/register', async (req, res) => {
 
     res.status(201).json({
       message: 'Registration successful',
-      user: { id: user._id, email: user.email, role: user.role }
+      user: { id: user._id, email: user.email, role: user.role, phone: user.phone }
     });
   } catch (error) {
-    console.error('❌ Registration Error DETAILS:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name,
-      code: error.code
-    });
+    console.error('❌ Registration Error DETAILS:', error);
     res.status(500).json({ error: 'Server error during registration', details: error.message });
   }
 });

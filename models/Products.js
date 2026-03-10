@@ -21,6 +21,10 @@ const productSchema = new mongoose.Schema({
         default: 0,
         min: [0, 'Quantity cannot be negative'] // Safety check
     },
+    unit: {
+        type: String,
+        default: 'Quintal'
+    },
     description: {
         type: String,
         default: "Fresh harvest from local fields."
