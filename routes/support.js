@@ -217,12 +217,32 @@ router.get('/my-reports', async (req, res) => {
     }
 });
 
+// In-memory cache for weather data to prevent 429 Rate Limit errors on shared hosting
+const weatherCache = {};
+const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
+
+const getCacheKey = (lat, lon, crop, lang) => {
+    // Round coordinates to 2 decimal places to group nearby requests (~1.1km)
+    const roundedLat = parseFloat(lat).toFixed(2);
+    const roundedLon = parseFloat(lon).toFixed(2);
+    return `${roundedLat}_${roundedLon}_${crop}_${lang}`;
+};
+
 // @route   GET api/support/weather
 // @desc    Get real-time weather and crop-specific advisories
 router.get('/weather', async (req, res) => {
     const { lat = 28.6139, lon = 77.2090, crop = 'General', lang = 'en' } = req.query;
+    const cacheKey = getCacheKey(lat, lon, crop, lang);
+
+    // Check cache
+    const cachedData = weatherCache[cacheKey];
+    if (cachedData && (Date.now() - cachedData.timestamp < CACHE_DURATION)) {
+        console.log('⚡ Using Cached Weather Data for:', cacheKey);
+        return res.json({ success: true, data: cachedData.data });
+    }
 
     try {
+        console.log('📡 Fetching Fresh Weather Data from Open-Meteo...');
         const weatherRes = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&hourly=precipitation_probability&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`);
 
         const current = weatherRes.data.current;
@@ -267,29 +287,44 @@ router.get('/weather', async (req, res) => {
         // Extract precipitation probability for the next 8 hours
         const rainProb = hourly.precipitation_probability.slice(0, 8);
 
+        const responseData = {
+            temp,
+            humidity: current.relative_humidity_2m,
+            wind: current.wind_speed_10m,
+            code,
+            advisory: translatedAdvisory,
+            level,
+            icon,
+            rainProb,
+            crop,
+            location: { lat, lon },
+            forecast: daily.time.slice(0, 5).map((t, i) => ({
+                date: t,
+                max: daily.temperature_2m_max[i],
+                min: daily.temperature_2m_min[i],
+                code: daily.weather_code[i]
+            }))
+        };
+
+        // Update cache
+        weatherCache[cacheKey] = {
+            timestamp: Date.now(),
+            data: responseData
+        };
+
         res.json({
             success: true,
-            data: {
-                temp,
-                humidity: current.relative_humidity_2m,
-                wind: current.wind_speed_10m,
-                code,
-                advisory: translatedAdvisory,
-                level,
-                icon,
-                rainProb,
-                crop,
-                location: { lat, lon },
-                forecast: daily.time.slice(0, 5).map((t, i) => ({
-                    date: t,
-                    max: daily.temperature_2m_max[i],
-                    min: daily.temperature_2m_min[i],
-                    code: daily.weather_code[i]
-                }))
-            }
+            data: responseData
         });
     } catch (error) {
         console.error('❌ WEATHER API ERROR:', error.message);
+        
+        // If we have any expired cache, return it as a fallback instead of failing
+        if (cachedData) {
+            console.log('🔄 Fallback to expired cache due to API error');
+            return res.json({ success: true, data: cachedData.data });
+        }
+
         res.status(500).json({ success: false, message: 'Failed to fetch regional weather intelligence.' });
     }
 });
