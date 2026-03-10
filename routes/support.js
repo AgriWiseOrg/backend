@@ -242,36 +242,44 @@ router.get('/weather', async (req, res) => {
     }
 
     try {
-        console.log('📡 Fetching Fresh Weather Data from Open-Meteo...');
+        console.log('📡 Fetching Fresh Weather Data from WeatherAPI...');
         
+        const API_KEY = process.env.WEATHER_API_KEY;
+        if (!API_KEY) {
+            throw new Error('WEATHER_API_KEY is not configured in environment variables');
+        }
+
         let weatherRes;
         let retries = 3;
         while (retries > 0) {
             try {
-                weatherRes = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&hourly=precipitation_probability&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`);
+                weatherRes = await axios.get(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=5&aqi=no&alerts=no`);
                 break; // Success, exit loop
             } catch (err) {
-                if (err.response && err.response.status === 429 && retries > 1) {
-                    console.log(`⚠️ 429 Rate Limit Hit. Retrying in ${4 - retries} seconds...`);
-                    await new Promise(resolve => setTimeout(resolve, (4 - retries) * 1000));
-                    retries--;
-                } else {
-                    throw err; // Throw if not 429 or out of retries
-                }
+                console.log(`⚠️ Weather API Error. Retrying in ${4 - retries} seconds...`);
+                await new Promise(resolve => setTimeout(resolve, (4 - retries) * 1000));
+                retries--;
+                if (retries === 0) throw err;
             }
         }
 
         const current = weatherRes.data.current;
-        const daily = weatherRes.data.daily;
-        const hourly = weatherRes.data.hourly;
+        const forecastDays = weatherRes.data.forecast.forecastday;
 
         // Agricultural Advisory Logic
         let advisory = "Conditions are stable for most crops.";
         let level = "Normal";
         let icon = "✅";
 
-        const temp = current.temperature_2m;
-        const code = current.weather_code;
+        const temp = current.temp_c;
+        // Map WeatherAPI codes to Open-Meteo style codes for frontend compatibility
+        // WeatherAPI uses 1000 (sunny), 1003 (cloudy), 1183 (rain). We'll map them roughly:
+        let code = 0; // default clear
+        const wCode = current.condition.code;
+        if (wCode >= 1003 && wCode <= 1030) code = 2; // cloudy/mist
+        else if (wCode >= 1063 && wCode <= 1201) code = 51; // rain/drizzle
+        else if (wCode >= 1210 || wCode === 1066) code = 71; // snow
+        else if (wCode >= 1273) code = 95; // thunder/storm
 
         // Crop-Specific Logic
         if (crop === 'Rice') {
@@ -301,12 +309,26 @@ router.get('/weather', async (req, res) => {
         const translatedAdvisory = translateAdvisory(advisory, lang);
 
         // Extract precipitation probability for the next 8 hours
-        const rainProb = hourly.precipitation_probability.slice(0, 8);
+        // WeatherAPI gives hourly forecast data in the first forecast day
+        let rainProb = [];
+        const currentHourIndex = new Date().getHours();
+        const todayHours = forecastDays[0].hour;
+        const tomorrowHours = forecastDays[1]?.hour || [];
+        
+        // Grab the next 8 hours, wrapping into tomorrow if needed
+        for (let i = 0; i < 8; i++) {
+            let hourIdx = currentHourIndex + i;
+            if (hourIdx < 24) {
+                rainProb.push(todayHours[hourIdx].chance_of_rain);
+            } else {
+                rainProb.push(tomorrowHours[hourIdx - 24]?.chance_of_rain || 0);
+            }
+        }
 
         const responseData = {
             temp,
-            humidity: current.relative_humidity_2m,
-            wind: current.wind_speed_10m,
+            humidity: current.humidity,
+            wind: current.wind_kph,
             code,
             advisory: translatedAdvisory,
             level,
@@ -314,12 +336,22 @@ router.get('/weather', async (req, res) => {
             rainProb,
             crop,
             location: { lat, lon },
-            forecast: daily.time.slice(0, 5).map((t, i) => ({
-                date: t,
-                max: daily.temperature_2m_max[i],
-                min: daily.temperature_2m_min[i],
-                code: daily.weather_code[i]
-            }))
+            forecast: forecastDays.map(day => {
+                // Map code just like above
+                let dCode = 0;
+                const dwCode = day.day.condition.code;
+                if (dwCode >= 1003 && dwCode <= 1030) dCode = 2; 
+                else if (dwCode >= 1063 && dwCode <= 1201) dCode = 51; 
+                else if (dwCode >= 1210 || dwCode === 1066) dCode = 71; 
+                else if (dwCode >= 1273) dCode = 95;
+
+                return {
+                    date: day.date,
+                    max: day.day.maxtemp_c,
+                    min: day.day.mintemp_c,
+                    code: dCode
+                }
+            })
         };
 
         // Update cache
