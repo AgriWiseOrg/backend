@@ -10,12 +10,12 @@ describe('PredictionModel Model', () => {
         // ideally use a test DB, but we will be careful
         const mongoURI = process.env.MONGO_URI;
         if (mongoose.connection.readyState === 0) {
-            await mongoose.connect(mongoURI);
+            
         }
     });
 
     afterAll(async () => {
-        await mongoose.connection.close();
+        
     });
 
     afterEach(async () => {

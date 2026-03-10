@@ -12,7 +12,7 @@ describe('Product API Route Tests', () => {
 
     // Close database connection after all tests
     afterAll(async () => {
-        await mongoose.connection.close();
+        
     });
 
     // UNIT TEST: GET ALL PRODUCTS

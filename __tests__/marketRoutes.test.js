@@ -19,7 +19,7 @@ describe('Market Routes (server.js)', () => {
     });
 
     afterAll(async () => {
-        await mongoose.connection.close();
+        
     });
 
     // GET /api/market/prices
