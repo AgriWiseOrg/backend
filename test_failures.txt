@@ -78,7 +78,7 @@ PASS __tests__/predictionModel.test.js
       at log (server.js:387:13)
 
   console.log
-    🚀 Server running on http://localhost:5001
+    🚀 Server running on http://localhost:5002
 
       at Server.log (server.js:616:11)
 
@@ -319,7 +319,7 @@ PASS __tests__/predictionModel.test.js
       at asyncGeneratorStep (routes/support.js:2:1)
 
   console.log
-    🚀 Server running on http://localhost:5001
+    🚀 Server running on http://localhost:5002
 
       at Server.log (server.js:616:11)
 
