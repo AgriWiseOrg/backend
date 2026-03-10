@@ -1,5 +1,5 @@
 // Main application entry point
-const express = require('express');
+const express = require('express'); // http framework
 const mongoose = require('mongoose');
 const cors = require('cors');
 const axios = require('axios');
