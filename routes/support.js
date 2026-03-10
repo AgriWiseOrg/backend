@@ -243,7 +243,23 @@ router.get('/weather', async (req, res) => {
 
     try {
         console.log('📡 Fetching Fresh Weather Data from Open-Meteo...');
-        const weatherRes = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&hourly=precipitation_probability&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`);
+        
+        let weatherRes;
+        let retries = 3;
+        while (retries > 0) {
+            try {
+                weatherRes = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&hourly=precipitation_probability&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`);
+                break; // Success, exit loop
+            } catch (err) {
+                if (err.response && err.response.status === 429 && retries > 1) {
+                    console.log(`⚠️ 429 Rate Limit Hit. Retrying in ${4 - retries} seconds...`);
+                    await new Promise(resolve => setTimeout(resolve, (4 - retries) * 1000));
+                    retries--;
+                } else {
+                    throw err; // Throw if not 429 or out of retries
+                }
+            }
+        }
 
         const current = weatherRes.data.current;
         const daily = weatherRes.data.daily;
