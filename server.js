@@ -3,9 +3,28 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const axios = require('axios');
 const path = require('path');
+const http = require('http');
+const socketIo = require('socket.io');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
+// Store io in app to use in routes
+app.set('socketio', io);
+
+io.on('connection', (socket) => {
+  console.log('⚡ New client connected:', socket.id);
+  socket.on('disconnect', () => {
+    console.log('🔥 Client disconnected:', socket.id);
+  });
+});
 
 // ================= MODELS =================
 const User = require('./models/User');
@@ -24,6 +43,7 @@ const productRoutes = require('./routes/products');
 const userRoutes = require('./routes/users');
 const orderRoutes = require('./routes/orders');
 const stripeRoutes = require('./routes/stripeRoutes');
+const biddingRoutes = require('./routes/bidding');
 // ================= MIDDLEWARE (CRITICAL ORDER) =================
 // These must be defined BEFORE any routes to process data correctly
 app.use(cors());
@@ -42,6 +62,7 @@ app.use('/api/stripe', stripeRoutes);
 app.use('/api/govt-schemes', require('./routes/govtSchemes'));
 app.use('/api/farming-tips', require('./routes/farmingTips'));
 app.use('/api/latest-updates', require('./routes/latestUpdates'));
+app.use('/api/bidding', biddingRoutes);
 
 // ================= DATABASE CONNECTION =================
 mongoose.connect(process.env.MONGO_URI)
@@ -620,9 +641,9 @@ app.post('/api/market/quality-price', (req, res) => {
 
 // ================= SERVER START =================
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
-  
+
   // Keep-alive ping to prevent Render free tier sleep
   const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
   setInterval(async () => {
