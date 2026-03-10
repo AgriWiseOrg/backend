@@ -118,7 +118,7 @@ app.post('/api/auth/send-email-otp', async (req, res) => {
   } catch (error) {
     console.error('❌ Send OTP Error:', error);
     // If Nodemailer throws because .env is missing, send 500 error
-    res.status(500).json({ error: 'Failed to send OTP email. Make sure EMAIL_USER and EMAIL_PASS are configured in backend .env' });
+    res.status(500).json({ error: 'Failed to send OTP email. Make sure RESEND_API_KEY is configured in backend .env' });
   }
 });
 
