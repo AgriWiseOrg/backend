@@ -244,7 +244,7 @@ router.get('/weather', async (req, res) => {
     try {
         console.log('📡 Fetching Fresh Weather Data from OpenWeatherMap...');
         
-        const API_KEY = process.env.WEATHER_API_KEY; // The user provided the OpenWeatherMap key
+        const API_KEY = process.env.WEATHER_API_KEY?.trim(); // The user provided the OpenWeatherMap key
         if (!API_KEY) {
             throw new Error('WEATHER_API_KEY is not configured in environment variables');
         }
@@ -253,8 +253,20 @@ router.get('/weather', async (req, res) => {
         let retries = 3;
         while (retries > 0) {
             try {
-                // OpenWeatherMap 5-day / 3-hour forecast
-                weatherRes = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`);
+                // OpenWeatherMap 5-day / 3-hour forecast using native fetch and AbortController for timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 6000);
+                
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`, {
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                weatherRes = { data };
                 break; // Success, exit loop
             } catch (err) {
                 console.log(`⚠️ Weather API Error. Retrying in ${4 - retries} seconds...`);
