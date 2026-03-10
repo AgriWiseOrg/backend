@@ -1,19 +1,28 @@
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const sendEmailOtp = async (toEmail, otp) => {
-  const apiKey = process.env.RESEND_API_KEY;
+  const emailUser = process.env.EMAIL_USER;
+  const emailPass = process.env.EMAIL_PASS;
 
-  if (!apiKey) {
-    throw new Error('RESEND_API_KEY not configured in .env file');
+  if (!emailUser || !emailPass) {
+    throw new Error('EMAIL_USER or EMAIL_PASS not configured in .env file');
   }
 
-  const resend = new Resend(apiKey);
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // SSL
+    auth: {
+      user: emailUser,
+      pass: emailPass
+    }
+  });
 
-  const fromEmail = process.env.EMAIL_FROM || 'AgriWise <onboarding@resend.dev>';
-
-  const { data, error } = await resend.emails.send({
-    from: fromEmail,
-    to: [toEmail],
+  const mailOptions = {
+    from: `"AgriWise" <${emailUser}>`,
+    to: toEmail,
     subject: 'AgriWise Registration - Verify Your Email',
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
@@ -26,15 +35,16 @@ const sendEmailOtp = async (toEmail, otp) => {
         <p>If you did not request this, please ignore this email.</p>
       </div>
     `
-  });
+  };
 
-  if (error) {
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`✉️ Email OTP sent to ${toEmail}. Message ID: ${info.messageId}`);
+    return true;
+  } catch (error) {
     console.error(`❌ Error sending email to ${toEmail}:`, error);
-    throw new Error(error.message);
+    throw error;
   }
-
-  console.log(`✉️ Email OTP sent to ${toEmail}. Message ID: ${data.id}`);
-  return true;
 };
 
 module.exports = {

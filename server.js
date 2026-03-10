@@ -6,7 +6,7 @@ const path = require('path');
 const http = require('http');
 const socketIo = require('socket.io');
 const crypto = require('crypto');
-const { sendEmailOtp } = require('./utils/mailer');
+// Email OTP removed — direct registration enabled
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
@@ -75,87 +75,30 @@ mongoose.connect(process.env.MONGO_URI)
 
 // ================= AUTHENTICATION =================
 
-// 1. Generate & Send Email OTP
-app.post('/api/auth/send-email-otp', async (req, res) => {
-  const { email, phone } = req.body;
+// Register (direct — no OTP)
+app.post('/api/auth/register', async (req, res) => {
+  const { email, password, role, phone } = req.body;
+
+  if (!email || !password || !phone || !role) {
+    return res.status(400).json({ error: 'Email, password, phone, and role are required' });
+  }
 
   try {
-    // Check if user already exists and is fully verified
-    const existingUser = await User.findOne({ 
-      $or: [{ email }, { phone }] 
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User with this email already exists' });
+    }
+
+    const user = new User({
+      email,
+      phone,
+      password,
+      role: role.toLowerCase(),
+      isEmailVerified: true
     });
 
-    if (existingUser && existingUser.isEmailVerified) {
-      return res.status(400).json({ error: 'User with this email or phone already exists' });
-    }
-
-    // Generate 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 mins expiry
-
-    // Save temporary user or update existing unverified user
-    let user = await User.findOne({ email });
-    if (!user) {
-      user = new User({
-        email,
-        phone,
-        password: crypto.randomBytes(16).toString('hex'), // Temporary random securely
-        otp,
-        otpExpires
-      });
-    } else {
-      user.otp = otp;
-      user.otpExpires = otpExpires;
-      user.phone = phone; // update phone if changed
-    }
-
     await user.save();
-
-    // Send the actual Email via Nodemailer
-    await sendEmailOtp(email, otp);
-
-    res.json({ message: 'OTP sent to email successfully' });
-  } catch (error) {
-    console.error('❌ Send OTP Error:', error);
-    // If Nodemailer throws because .env is missing, send 500 error
-    res.status(500).json({ error: 'Failed to send OTP email. Make sure RESEND_API_KEY is configured in backend .env' });
-  }
-});
-
-// 2. Verify OTP & Register
-app.post('/api/auth/register', async (req, res) => {
-  const { email, password, role, phone, otp } = req.body;
-  
-  if (!email || !otp) {
-    return res.status(400).json({ error: 'Email and OTP are required' });
-  }
-
-  try {
-    const user = await User.findOne({ email });
-    
-    if (!user) {
-       return res.status(404).json({ error: 'User not found. Please request OTP first.' });
-    }
-
-    if (user.isEmailVerified) {
-      return res.status(400).json({ error: 'Email already verified and registered.' });
-    }
-
-    if (user.otp !== otp || user.otpExpires < new Date()) {
-      return res.status(400).json({ error: 'Invalid or expired OTP' });
-    }
-
-    // Verification successful, complete registration
-    user.email = email;
-    user.phone = phone;
-    user.password = password; // Reminder: Hash this in production!
-    user.role = role.toLowerCase();
-    user.isEmailVerified = true;
-    user.otp = undefined; // Clear OTP
-    user.otpExpires = undefined;
-
-    await user.save();
-    console.log('✅ New User Registered via Email OTP:', email);
+    console.log('✅ New User Registered:', email);
 
     res.status(201).json({
       message: 'Registration successful',
