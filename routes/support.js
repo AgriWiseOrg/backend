@@ -341,7 +341,82 @@ router.get('/weather', async (req, res) => {
             return res.json({ success: true, data: cachedData.data });
         }
 
-        res.status(500).json({ success: false, message: 'Failed to fetch regional weather intelligence.' });
+        console.log('🔄 Generating Mock Weather Data as Ultimate Fallback');
+        
+        // Mock Data Generator
+        const mockTemp = Math.floor(Math.random() * (35 - 20 + 1)) + 20; // 20 to 35
+        const mockCode = [0, 1, 2, 3, 51, 61, 80][Math.floor(Math.random() * 7)]; // Random valid codes
+        const mockWind = Math.floor(Math.random() * 25) + 5; // 5 to 30
+        const mockHumidity = Math.floor(Math.random() * (90 - 40 + 1)) + 40; // 40 to 90
+        
+        // Agricultural Advisory Logic for Mock Data
+        let advisory = "Conditions are stable for most crops.";
+        let level = "Normal";
+        let icon = "✅";
+
+        if (crop === 'Rice') {
+            if (mockTemp > 35) advisory = "High heat! Rice requires standing water. Increase irrigation to prevent soil cracking.";
+            else if (mockCode >= 51) advisory = "Rain expected. Good for transplanting, but ensure drainage isn't blocked.";
+            else advisory = "Maintain 2-3 inches of standing water in the fields.";
+        } else if (crop === 'Wheat') {
+            if (mockTemp > 28) advisory = "Warm winds detected. Terminal heat may reduce grain size. Apply light irrigation.";
+            else if (mockCode >= 51) advisory = "Rain expected. Postpone irrigation to avoid waterlogging and root rot.";
+            else advisory = "Ideal conditions for tillering. Monitor for rust diseases.";
+        } else if (crop === 'Tomato') {
+            if (mockTemp > 32) advisory = "Extreme heat can cause blossom drop. Use mulch to keep roots cool.";
+            else if (mockCode >= 51) advisory = "High humidity/Rain. Risk of Late Blight. Apply protective fungicide spray.";
+            else advisory = "Perfect for fruit setting. Maintain consistent soil moisture.";
+        } else {
+            if (mockTemp > 38) {
+                advisory = "Extreme heat alert! Protect all young saplings and increase water frequency.";
+                level = "Critical"; icon = "🔥";
+            } else if (mockCode >= 51) {
+                advisory = "Precipitation alert. Delay pesticide application and check drainage channels.";
+                level = "Warning"; icon = "🌧️";
+            }
+        }
+
+        const translatedAdvisory = translateAdvisory(advisory, lang);
+
+        const mockRainProb = Array.from({ length: 8 }, () => Math.floor(Math.random() * 60)); // 0 to 60%
+        
+        const now = new Date();
+        const mockForecast = Array.from({ length: 5 }, (_, i) => {
+            const d = new Date(now);
+            d.setDate(d.getDate() + i);
+            return {
+                date: d.toISOString().split('T')[0],
+                max: mockTemp + Math.floor(Math.random() * 5),
+                min: mockTemp - Math.floor(Math.random() * 5) - 5,
+                code: [0, 1, 2, 3, 51, 61, 80][Math.floor(Math.random() * 7)]
+            };
+        });
+
+        const mockResponseData = {
+            temp: mockTemp,
+            humidity: mockHumidity,
+            wind: mockWind,
+            code: mockCode,
+            advisory: translatedAdvisory,
+            level,
+            icon,
+            rainProb: mockRainProb,
+            crop,
+            location: { lat, lon },
+            forecast: mockForecast,
+            isMock: true // flag to indicate it's mock data
+        };
+
+        // Cache the mock data so we don't recalculate it rapidly
+        weatherCache[cacheKey] = {
+            timestamp: Date.now(),
+            data: mockResponseData
+        };
+
+        return res.json({
+            success: true,
+            data: mockResponseData
+        });
     }
 });
 
