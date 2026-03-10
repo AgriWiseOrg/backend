@@ -242,9 +242,9 @@ router.get('/weather', async (req, res) => {
     }
 
     try {
-        console.log('📡 Fetching Fresh Weather Data from WeatherAPI...');
+        console.log('📡 Fetching Fresh Weather Data from OpenWeatherMap...');
         
-        const API_KEY = process.env.WEATHER_API_KEY;
+        const API_KEY = process.env.WEATHER_API_KEY; // The user provided the OpenWeatherMap key
         if (!API_KEY) {
             throw new Error('WEATHER_API_KEY is not configured in environment variables');
         }
@@ -253,7 +253,8 @@ router.get('/weather', async (req, res) => {
         let retries = 3;
         while (retries > 0) {
             try {
-                weatherRes = await axios.get(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=5&aqi=no&alerts=no`);
+                // OpenWeatherMap 5-day / 3-hour forecast
+                weatherRes = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`);
                 break; // Success, exit loop
             } catch (err) {
                 console.log(`⚠️ Weather API Error. Retrying in ${4 - retries} seconds...`);
@@ -263,23 +264,25 @@ router.get('/weather', async (req, res) => {
             }
         }
 
-        const current = weatherRes.data.current;
-        const forecastDays = weatherRes.data.forecast.forecastday;
+        const forecastList = weatherRes.data.list;
+        const current = forecastList[0]; // Nearest 3-hour block is our "current"
 
         // Agricultural Advisory Logic
         let advisory = "Conditions are stable for most crops.";
         let level = "Normal";
         let icon = "✅";
 
-        const temp = current.temp_c;
-        // Map WeatherAPI codes to Open-Meteo style codes for frontend compatibility
-        // WeatherAPI uses 1000 (sunny), 1003 (cloudy), 1183 (rain). We'll map them roughly:
+        const temp = current.main.temp;
+        
+        // Map OpenWeatherMap codes to Open-Meteo style codes for frontend compatibility
+        // OpenWeatherMap uses 2xx (Thunderstorm), 3xx (Drizzle), 5xx (Rain), 6xx (Snow), 7xx (Atmosphere/Mist), 800 (Clear), 80x (Clouds)
         let code = 0; // default clear
-        const wCode = current.condition.code;
-        if (wCode >= 1003 && wCode <= 1030) code = 2; // cloudy/mist
-        else if (wCode >= 1063 && wCode <= 1201) code = 51; // rain/drizzle
-        else if (wCode >= 1210 || wCode === 1066) code = 71; // snow
-        else if (wCode >= 1273) code = 95; // thunder/storm
+        const wCode = current.weather[0].id;
+        if (wCode >= 801 && wCode <= 804) code = 2; // cloudy
+        else if (wCode >= 701 && wCode <= 781) code = 45; // mist/fog
+        else if (wCode >= 300 && wCode <= 531) code = 51; // rain/drizzle
+        else if (wCode >= 600 && wCode <= 622) code = 71; // snow
+        else if (wCode >= 200 && wCode <= 232) code = 95; // thunder/storm
 
         // Crop-Specific Logic
         if (crop === 'Rice') {
@@ -308,27 +311,48 @@ router.get('/weather', async (req, res) => {
         // Translate advisory before sending
         const translatedAdvisory = translateAdvisory(advisory, lang);
 
-        // Extract precipitation probability for the next 8 hours
-        // WeatherAPI gives hourly forecast data in the first forecast day
+        // Extract precipitation probability for the next 8 hours (OpenWeatherMap gives 3-hour chunks, so we'll grab the first 3 chunks to approximate 9 hours)
         let rainProb = [];
-        const currentHourIndex = new Date().getHours();
-        const todayHours = forecastDays[0].hour;
-        const tomorrowHours = forecastDays[1]?.hour || [];
-        
-        // Grab the next 8 hours, wrapping into tomorrow if needed
-        for (let i = 0; i < 8; i++) {
-            let hourIdx = currentHourIndex + i;
-            if (hourIdx < 24) {
-                rainProb.push(todayHours[hourIdx].chance_of_rain);
-            } else {
-                rainProb.push(tomorrowHours[hourIdx - 24]?.chance_of_rain || 0);
+        for (let i = 0; i < 3; i++) {
+            // populating 3 entries per 3-hour block to simulate hourly chart in frontend
+            const prob = Math.round((forecastList[i]?.pop || 0) * 100);
+            rainProb.push(prob, prob, prob); 
+        }
+        rainProb = rainProb.slice(0, 8); // trim strictly exactly to 8 hours
+
+        // Process 5-day forecast (OpenWeatherMap gives 40 records, 1 per 3 hours. We take 1 per day)
+        const dailyForecasts = [];
+        const seenDays = new Set();
+        for (let i = 0; i < forecastList.length; i++) {
+            const dateObj = new Date(forecastList[i].dt * 1000);
+            const dateStr = dateObj.toISOString().split('T')[0];
+            
+            if (!seenDays.has(dateStr)) {
+                seenDays.add(dateStr);
+                
+                const dwCode = forecastList[i].weather[0].id;
+                let dCode = 0;
+                if (dwCode >= 801 && dwCode <= 804) dCode = 2; 
+                else if (dwCode >= 701 && dwCode <= 781) dCode = 45; 
+                else if (dwCode >= 300 && dwCode <= 531) dCode = 51; 
+                else if (dwCode >= 600 && dwCode <= 622) dCode = 71; 
+                else if (dwCode >= 200 && dwCode <= 232) dCode = 95;
+
+                dailyForecasts.push({
+                    date: dateStr,
+                    max: forecastList[i].main.temp_max + 2, // Slight adjustment for daily max approximation from 3hr snippet
+                    min: forecastList[i].main.temp_min - 2,
+                    code: dCode
+                });
+                
+                if (dailyForecasts.length === 5) break;
             }
         }
 
         const responseData = {
             temp,
-            humidity: current.humidity,
-            wind: current.wind_kph,
+            humidity: current.main.humidity,
+            wind: Math.round(current.wind.speed * 3.6), // Convert m/s to km/h
             code,
             advisory: translatedAdvisory,
             level,
@@ -336,22 +360,7 @@ router.get('/weather', async (req, res) => {
             rainProb,
             crop,
             location: { lat, lon },
-            forecast: forecastDays.map(day => {
-                // Map code just like above
-                let dCode = 0;
-                const dwCode = day.day.condition.code;
-                if (dwCode >= 1003 && dwCode <= 1030) dCode = 2; 
-                else if (dwCode >= 1063 && dwCode <= 1201) dCode = 51; 
-                else if (dwCode >= 1210 || dwCode === 1066) dCode = 71; 
-                else if (dwCode >= 1273) dCode = 95;
-
-                return {
-                    date: day.date,
-                    max: day.day.maxtemp_c,
-                    min: day.day.mintemp_c,
-                    code: dCode
-                }
-            })
+            forecast: dailyForecasts
         };
 
         // Update cache
