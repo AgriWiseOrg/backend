@@ -42,6 +42,7 @@ app.use('/api/stripe', stripeRoutes);
 app.use('/api/govt-schemes', require('./routes/govtSchemes'));
 app.use('/api/farming-tips', require('./routes/farmingTips'));
 app.use('/api/latest-updates', require('./routes/latestUpdates'));
+app.use('/api/ml', require('./routes/mlRoutes'));
 
 // ================= DATABASE CONNECTION =================
 mongoose.connect(process.env.MONGO_URI)
@@ -622,7 +623,7 @@ app.post('/api/market/quality-price', (req, res) => {
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
-  
+
   // Keep-alive ping to prevent Render free tier sleep
   const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
   setInterval(async () => {
