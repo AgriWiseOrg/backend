@@ -63,6 +63,8 @@ app.use('/api/govt-schemes', require('./routes/govtSchemes'));
 app.use('/api/farming-tips', require('./routes/farmingTips'));
 app.use('/api/latest-updates', require('./routes/latestUpdates'));
 app.use('/api/bidding', biddingRoutes);
+app.use('/api/ml', require('./routes/mlRoutes'));
+
 
 // ================= DATABASE CONNECTION =================
 mongoose.connect(process.env.MONGO_URI)
