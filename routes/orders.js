@@ -50,7 +50,7 @@ router.get('/buyer/:email', async (req, res) => {
 router.put('/:id/status', async (req, res) => {
     try {
         const { status } = req.body;
-        const validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+        const validStatuses = ['Pending', 'Confirmed', 'Rejected', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
 
         if (!validStatuses.includes(status)) {
             return res.status(400).json({ message: "Invalid status value" });
@@ -114,9 +114,12 @@ router.post('/', async (req, res) => {
             // If missing, look it up from the Product and User models
             if (!farmerEmail && item.productId) {
                 try {
+                    console.log("Looking up product ID:", item.productId);
                     const product = await Product.findById(item.productId);
+                    console.log("Product found:", !!product, product ? product.farmerId : null);
                     if (product && product.farmerId) {
                         const user = await User.findById(product.farmerId);
+                        console.log("User found:", !!user, user ? user.email : null);
                         if (user && user.email) {
                             farmerEmail = user.email;
                         }
@@ -126,9 +129,12 @@ router.post('/', async (req, res) => {
                 }
             }
 
+            console.log("farmerEmail after lookup:", farmerEmail);
+
             // Fallback if still missing
             if (!farmerEmail) {
                 farmerEmail = `${item.farmerName ? item.farmerName.replace(/\s+/g, '').toLowerCase() : 'verifiedfarmer'}@agriwise.com`;
+                console.log("Used fallback farmerEmail:", farmerEmail);
             }
 
             if (!ordersByFarmer[farmerEmail]) {
