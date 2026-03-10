@@ -5,15 +5,27 @@ const Product = require('../models/Products');
 // Start Bidding (Farmer only)
 router.post('/start/:productId', async (req, res) => {
     try {
-        const { durationMinutes } = req.body;
+        const { durationMinutes, basePrice } = req.body;
         const endTime = new Date(Date.now() + durationMinutes * 60000);
 
-        const product = await Product.findByIdAndUpdate(req.params.productId, {
+        const updateData = {
             isBiddingActive: true,
             biddingEndTime: endTime,
-            currentBid: 0,
+            currentBid: basePrice || 0,
             bids: []
-        }, { new: true });
+        };
+
+        // If farmer provided a custom base price, update the formal product price too
+        if (basePrice) {
+            updateData.price = basePrice;
+        }
+
+        const product = await Product.findByIdAndUpdate(
+            req.params.productId,
+            updateData,
+            { new: true }
+        );
+
 
         // Emit socket event (handled in server.js)
         req.app.get('socketio').emit('biddingStarted', product);
