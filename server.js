@@ -1,4 +1,5 @@
-const express = require('express');
+// Main application entry point
+const express = require('express'); // http framework
 const mongoose = require('mongoose');
 const cors = require('cors');
 const axios = require('axios');
@@ -647,20 +648,25 @@ app.post('/api/market/quality-price', (req, res) => {
 
 // ================= SERVER START =================
 const PORT = process.env.PORT || 5001;
-server.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
 
-  // Keep-alive ping to prevent Render free tier sleep
-  const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
-  setInterval(async () => {
-    try {
-      await axios.get(`${RENDER_URL}/api/market/crops`);
-      console.log(`⏱️ Keep-alive ping sent to ${RENDER_URL}/api/market/crops`);
-    } catch (error) {
-      console.error('Keep-alive ping failed:', error.message);
-    }
-  }, 5 * 60 * 1000); // Ping every 5 minutes (300000 ms)
-});
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+
+    // Keep-alive ping to prevent Render free tier sleep
+    const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+    setInterval(async () => {
+      try {
+        await axios.get(`${RENDER_URL}/api/market/crops`);
+        console.log(`⏱️ Keep-alive ping sent to ${RENDER_URL}/api/market/crops`);
+      } catch (error) {
+        console.error('Keep-alive ping failed:', error.message);
+      }
+    }, 5 * 60 * 1000); // Ping every 5 minutes (300000 ms)
+  });
+}
 
 // Export app for testing
-module.exports = app;
+module.exports = server;
+/ /   T e s t   e n v i r o n m e n t   v a r i a b l e s   p r o v i s i o n e d  
+ 

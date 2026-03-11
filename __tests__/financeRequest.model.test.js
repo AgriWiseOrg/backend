@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const FinanceRequest = require('../models/FinanceRequest');
 
 beforeAll(async () => {
-  await mongoose.connect('mongodb://127.0.0.1:27017/finance_test');
+  
 });
 
 afterEach(async () => {
@@ -17,7 +17,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  await mongoose.connection.close();
+  
 });
 
 describe('FinanceRequest Model', () => {

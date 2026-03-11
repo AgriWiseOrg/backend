@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 const FarmingTip = require('../models/FarmingTip');
 
 beforeAll(async () => {
-  await mongoose.connect('mongodb://127.0.0.1:27017/farmingtip_test');
+  
 });
 
 afterEach(async () => {
@@ -18,7 +18,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  await mongoose.connection.close();
+  
 });
 
 describe('FarmingTip Model', () => {

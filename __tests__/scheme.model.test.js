@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const Scheme = require('../models/Scheme');
 
 beforeAll(async () => {
-  await mongoose.connect('mongodb://127.0.0.1:27017/scheme_test');
+  
 });
 
 afterEach(async () => {
@@ -17,7 +17,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  await mongoose.connection.close();
+  
 });
 
 describe('Scheme Model', () => {
