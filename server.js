@@ -668,5 +668,3 @@ if (require.main === module) {
 
 // Export app for testing
 module.exports = server;
-/ /   T e s t   e n v i r o n m e n t   v a r i a b l e s   p r o v i s i o n e d  
- 
